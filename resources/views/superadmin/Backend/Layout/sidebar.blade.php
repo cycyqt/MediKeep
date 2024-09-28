@@ -248,6 +248,6 @@
 
       <a class="btn bg-gradient-primary mt-4 w-100" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
           Logout
-      </a>    
+      </a>
     </div>
   </aside>

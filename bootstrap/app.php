@@ -11,8 +11,15 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->alias([
+            'user-role' =>  \App\Http\Middleware\RoleMiddleWare::class,
+            
+        ]);
+        $middleware->web(append: [
+            \App\Http\Middleware\AutoLogout::class,
+        ]);
     })
+    
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();

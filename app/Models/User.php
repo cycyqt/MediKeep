@@ -44,4 +44,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    protected function role(): Attribute
+    {
+        return new Attribute(
+            get: fn($value) => ["staff", "admin", "superadmin"][$value]
+        );
+    }
+    
 }
