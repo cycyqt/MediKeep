@@ -9,7 +9,12 @@ Route::get('/', function () {
 });
 
 Route::get('staff/home', [Staff_dashboard::class, 'home']);
+
 Route::get('staff/add', [Staff_dashboard::class, 'add']);
+
+Route::post('staff/add_category', [Staff_dashboard::class, 'add_category'])->name('staff.add_category');
+Route::delete('staff/delete_category/{id}', [Staff_dashboard::class, 'delete_category'])->name('staff.delete_category');
+
 Route::get('staff/list', [Staff_dashboard::class, 'list']);
 
 Route::get('staff/dashboard', function () {

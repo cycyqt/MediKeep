@@ -25,13 +25,14 @@
                                     <h3 class="card-title">Medicine Category </h3>
                                 </div>
 
-                                <form action="">
+                                <form action="{{ route('staff.add_category') }}" method="post">
+                                    @csrf
                                     <div class="row g-3 px-4 mt-4">
 
                                         <div class="col-md-12 mb-5">
                                             <div class="input-group">
                                                 <span class="input-group-text bg-gray-200 ">Medicine Category</span>
-                                                <input type="text" class="form-control" name="Medicine_Category" required>
+                                                <input type="text" class="form-control" name="name" required>
                                             </div>
                                         </div>
                                     </div>
@@ -66,30 +67,16 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @foreach($categories as $key => $category)
                                             <tr>
-                                                <td>1</td>
-                                                <td>Anitibiotic</td>
+                                                <td>{{ $key + 1 }}</td> <!-- Incremental ID -->
+                                                <td>{{ $category->name }}</td> <!-- Display category name -->
                                                 <td> 
-                                                    <a href="" class="btn btn-primary">Edit</a>
-                                                    <a onclick="return confirm('Are you sure you want to DELETE')" href="#"  class="btn btn-danger">Delete</a>
+                                                    
+                                                    <a onclick="return confirm('Are you sure you want to DELETE?')" href="{{ route('staff.delete_category', $category->id) }}" class="btn btn-danger">Delete</a>
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <td>2</td>
-                                                <td>Vitamin</td>
-                                                <td> 
-                                                    <a href="" class="btn btn-primary">Edit</a>
-                                                    <a onclick="return confirm('Are you sure you want to DELETE')" href="#"  class="btn btn-danger">Delete</a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>3</td>
-                                                <td>Pain Killer</td>
-                                                <td> 
-                                                    <a href="" class="btn btn-primary">Edit</a>
-                                                    <a onclick="return confirm('Are you sure you want to DELETE')" href="#"  class="btn btn-danger">Delete</a>
-                                                </td>
-                                            </tr>
+                                        @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -210,9 +197,9 @@
                                             <div class="input-group">
                                                 <span class="input-group-text bg-gray-200">Medicine Category</span>
                                                 <select class="form-select form-control p-2" name="Medicine_Category">
-                                                <option value="vitamin">Vitamin</option>
-                                                <option value="antibiotic">Antibiotic</option>
-                                                <option value="paink_killer">Paink Killer</option>
+                                                @foreach($categories as $category)
+                                                     <option value="{{ $category->name }}">{{ $category->name }}</option>
+                                                 @endforeach
                                                 </select>
                                             </div>
                                         </div>
@@ -230,28 +217,28 @@
 
                                         <div class="col-md-6 mb-3">
                                             <div class="input-group">
-                                                <span class="input-group-text bg-gray-200 ">Product Name</span>
+                                                <span class="input-group-text bg-gray-200 p-2">Product Name</span>
                                                 <input type="text" class="form-control" name="Product_Name" required>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6 mb-3">
                                             <div class="input-group">
-                                                <span class="input-group-text bg-gray-200 ">Measurement</span>
+                                                <span class="input-group-text bg-gray-200 p-2">Measurement</span>
                                                 <input type="text" class="form-control" name="Measurement" required>
                                             </div>
                                         </div>
 
                                         <div class="col-md-8 mb-3">
                                             <div class="input-group">
-                                                <span class="input-group-text bg-gray-200 ">Descripion</span>
+                                                <span class="input-group-text bg-gray-200 p-2">Descripion</span>
                                                 <textarea class="form-control" name="Description" required></textarea>
                                             </div>
                                         </div>
 
                                         <div class="col-md-4 mb-3">
                                             <div class="input-group">
-                                                <span class="input-group-text bg-gray-200 ">Price</span>
+                                                <span class="input-group-text bg-gray-200 p-2">Price</span>
                                                 <input type="number" class="form-control" name="Price" required>
                                             </div>
                                         </div>
