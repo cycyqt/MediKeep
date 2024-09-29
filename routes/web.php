@@ -50,8 +50,17 @@ Route::middleware(['auth', 'user-role:admin'])->group(function () {
 Route::middleware(['auth', 'user-role:superadmin'])->group(function () {
     Route::prefix('superadmin')->controller(SuperAdmin_dashboard::class)->group(function () {
         Route::get('home', 'home')->name('superadmin.home');
+        Route::get('index', 'index')->name('users.index');
+        Route::post('store', 'store')->name('users.store');
+        Route::get('/users/{id}/edit', 'edit')->name('users.edit');
+        Route::put('/users/{id}', 'update')->name('users.update');
+        Route::get('users/{id}', 'show')->name('users.show');    
+        Route::delete('users/{id}', 'destroy')->name('users.destroy');
+        Route::delete('users/{id}/destroyForever', 'destroyForever')->name('users.destroyForever');
+        Route::patch('users/{id}/restore', 'restore')->name('users.restore');
     });
 });
+
 
 
 

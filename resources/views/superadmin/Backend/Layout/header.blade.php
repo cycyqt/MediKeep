@@ -22,9 +22,9 @@
           </div>
           <ul class="navbar-nav  justify-content-end">
             <li class="nav-item d-flex align-items-center">
-              <a href="javascript:;" class="nav-link text-body font-weight-bold px-0">
-                <img class="nav-img me-sm-1" src="../assets/img/cj.png" alt="User Logo" height="30" width="30">
-                <span class="d-sm-inline d-none">Carl Justin</span>
+              <a href="{{ route('profile.edit') }}" class="nav-link text-body font-weight-bold px-0">
+                  <img class="nav-img me-sm-1" src="{{ asset('assets/img/cj.png') }}" alt="User Logo" height="30" width="30">
+                  <span class="d-sm-inline d-none">Carl Justin</span>
               </a>
             </li>
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">

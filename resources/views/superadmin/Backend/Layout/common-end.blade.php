@@ -1,9 +1,4 @@
-  <!--   Core JS Files   -->
-  <script src="../assets/js/core/popper.min.js"></script>
-  <script src="../assets/js/core/bootstrap.min.js"></script>
-  <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
-  <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
-  <script src="../assets/js/plugins/chartjs.min.js"></script>
+
   <script>
     var ctx = document.getElementById("chart-bars").getContext("2d");
 
@@ -184,7 +179,7 @@
     }
   </script>
 
-<script>
+  <script>
     window.addEventListener('load', function() {
       const preloader = document.querySelector('.preloader');
       if (preloader) {
@@ -196,18 +191,25 @@
   
   <!-- Github buttons -->
   <!-- <script async defer src="https://buttons.github.io/buttons.js"></script> -->
-   
-  <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
-  <script src="../assets/js/soft-ui-dashboard.min.js?v=1.0.3"></script>
 
-  <!-- table cj -->
-  <script src="../assets/js/jquery3.5.1.js"></script>
-  <script src="../assets/js/simple-datatables.min.js"></script> 
-  <script src="{{asset('backend_auth/datatables.js')}}"></script>
+ <!--   Core JS Files   -->
+<script src="{{ asset('assets/js/core/popper.min.js') }}"></script>
+<script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>
+<script src="{{ asset('assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
+<script src="{{ asset('assets/js/plugins/smooth-scrollbar.min.js') }}"></script>
+<script src="{{ asset('assets/js/plugins/chartjs.min.js') }}"></script>
 
-  <!-- table built -->
-  <script src="{{asset('backend_auth/jquery.dataTables.min.js')}}"></script>
-  <script src="{{asset('backend_auth/dataTables.bootstrap4.min.js')}}"></script>
+<!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
+<script src="{{ asset('assets/js/soft-ui-dashboard.min.js?v=1.0.3') }}"></script>
 
-  <!-- Tab-links -->
-  <script src="{{asset('backend_auth/tab.js')}}"></script>
+<!-- table cj -->
+<script src="{{ asset('assets/js/jquery3.5.1.js') }}"></script>
+<script src="{{ asset('assets/js/simple-datatables.min.js') }}"></script>
+<script src="{{ asset('backend_auth/datatables.js') }}"></script>
+
+<!-- table built -->
+<script src="{{ asset('backend_auth/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('backend_auth/dataTables.bootstrap4.min.js') }}"></script>
+
+<!-- Tab-links -->
+<script src="{{ asset('backend_auth/tab.js') }}"></script>
