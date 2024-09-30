@@ -13,6 +13,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'user-role' =>  \App\Http\Middleware\RoleMiddleWare::class,
+            'superadmin' => \App\Http\Middleware\LogViewerAuth::class,
+            'loguseractivity' => \App\Http\Middleware\LogUserActivity::class,
             
         ]);
         $middleware->web(append: [

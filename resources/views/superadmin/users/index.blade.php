@@ -166,7 +166,7 @@
                                     <h3 class="card-title">Archived Users</h3>
                                 </div>
                                 <div class="table-responsive">
-                                    <table id="datatablesSimpleOne" class="table table-bordered table-hover">
+                                    <table id="datatablesSimpleTwo" class="table table-bordered table-hover">
                                         <thead>
                                             <tr>
                                                 <th>#</th>

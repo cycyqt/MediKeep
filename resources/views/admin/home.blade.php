@@ -1,6 +1,6 @@
-@extends('superadmin.Backend.Layout.app')
+@extends('admin.Backend.Layout.app')
 @section('breadcrumb', 'Home')
-@section('title', 'Staff')
+@section('title', 'Admin')
 @section('main-content')  
     
     <div class="py-12">
