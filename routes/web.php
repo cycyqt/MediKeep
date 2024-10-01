@@ -21,8 +21,7 @@ Route::fallback(function () {
     return redirect('/');
 });
 
-Route::middleware(['auth'])->group(function () {
-// Route::middleware(['auth', 'loguseractivity'])->group(function () {
+Route::middleware(['auth', 'loguseractivity'])->group(function () {
     // Profile routes
     Route::prefix('profile')->controller(ProfileController::class)->group(function () {
         Route::get('/', 'edit')->name('profile.edit');
