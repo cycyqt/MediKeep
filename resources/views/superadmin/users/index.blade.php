@@ -35,7 +35,7 @@
                 <div class="row mt-3">
                     <div class="col-lg-12 mb-lg-0 mb-4">
                         <div class="card z-index-2">
-                            <div class="card-body p-2">
+                            <div class="card-body p-4">
                                 <div class="card-header mb-2 p-2"> 
                                     <h3 class="card-title">User Lists</h3>
                                 </div>
@@ -103,7 +103,7 @@
                 <div class="row mt-3">
                     <div class="col-lg-12 mb-lg-0 mb-4">
                         <div class="card z-index-2">
-                            <div class="card-body p-2">
+                            <div class="card-body p-4">
                                 <div class="card-header mb-2 p-2"> 
                                     <h3 class="card-title">Add User</h3>
                                 </div>
@@ -161,7 +161,7 @@
                 <div class="row mt-3">
                     <div class="col-lg-12 mb-lg-0 mb-4">
                         <div class="card z-index-2">
-                            <div class="card-body p-2">
+                            <div class="card-body p-4">
                                 <div class="card-header mb-2 p-2"> 
                                     <h3 class="card-title">Archived Users</h3>
                                 </div>
