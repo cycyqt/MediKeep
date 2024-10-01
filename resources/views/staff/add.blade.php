@@ -272,16 +272,6 @@
             </div>
         </div>
         <!-- end -->
-        
-
-                
-
-          
-
-        
-
-        
-        
 
         <!-- footer -->
         <footer class="footer pt-3  ">
