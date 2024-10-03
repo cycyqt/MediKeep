@@ -35,8 +35,19 @@ Route::middleware(['auth', 'loguseractivity'])->group(function () {
         Route::prefix('staff')->controller(Staff_dashboard::class)->group(function () {
             Route::get('home', 'home')->name('staff.home');
             Route::get('add', 'add')->name('staff.add');
+
             Route::post('add_category', 'add_category')->name('staff.add_category');
+            Route::put('update_category', 'update_category')->name('staff.update_category');
             Route::delete('delete_category/{id}', 'delete_category')->name('staff.delete_category');
+
+            Route::post('add_subcategory', 'add_subcategory')->name('staff.add_subcategory');
+            Route::put('update_subcategory', 'update_subcategory')->name('staff.update_subcategory');
+            Route::delete('delete_subcategory/{id}', 'delete_subcategory')->name('staff.delete_subcategory');
+
+            Route::post('add_product', 'add_product')->name('staff.add_product');
+            Route::put('update_product', 'update_product')->name('staff.update_product');
+            Route::delete('delete_product/{id}', 'delete_product')->name('staff.delete_product');
+
             Route::get('list', 'list')->name('staff.list');
         });
     });
