@@ -61,6 +61,7 @@
                             <option value="pending" {{ $user->status == 'pending' ? 'selected' : '' }}>Pending</option>
                             <option value="approved" {{ $user->status == 'approved' ? 'selected' : '' }}>Approved</option>
                             <option value="rejected" {{ $user->status == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                            <option value="rejected" {{ $user->status == 'disabled' ? 'selected' : '' }}>Disabled</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary">Update User</button>

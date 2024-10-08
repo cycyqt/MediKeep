@@ -15,22 +15,22 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $users = [
-            [
-                'name' => 'Staff',
-                'email' => 'staff@staff.com',
-                'password' => bcrypt('1234'),
-                'role' => 1,
-                'status' => 'pending',
-                'email_verified_at' => null
-            ],
-            [
-                'name' => 'Admin',
-                'email' => 'admin@admin.com',
-                'password' => bcrypt('1234'),
-                'role' => 2,
-                'status' => 'pending',
-                'email_verified_at' => null
-            ],
+            // [
+            //     'name' => 'Staff',
+            //     'email' => 'staff@staff.com',
+            //     'password' => bcrypt('1234'),
+            //     'role' => 1,
+            //     'status' => 'pending',
+            //     'email_verified_at' => null
+            // ],
+            // [
+            //     'name' => 'Admin',
+            //     'email' => 'admin@admin.com',
+            //     'password' => bcrypt('1234'),
+            //     'role' => 2,
+            //     'status' => 'pending',
+            //     'email_verified_at' => null
+            // ],
             [
                 'name' => 'Super Admin',
                 'email' => 'ainzsama0006@gmail.com',
