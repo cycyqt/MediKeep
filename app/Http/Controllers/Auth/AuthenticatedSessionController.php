@@ -28,14 +28,21 @@ class AuthenticatedSessionController extends Controller
         
         $request->session()->regenerate();
         
-        // Check the user's role and redirect accordingly
+        // Check the user's status and role, and redirect accordingly
         $user = $request->user();
-        if ($user->role === 2) {  // 2 = admin
-            return redirect()->intended(route('admin.home'));
-        } elseif ($user->role === 3) {  // 3 = superadmin
-            return redirect()->intended(route('superadmin.home'));
-        } else {  // 1 = staff
-            return redirect()->intended(route('staff.home'));
+        if ($user->status === 'approved') {
+            if ($user->role === 2) {  // 2 = admin
+                return redirect()->intended(route('admin.home'));
+            } elseif ($user->role === 3) {  // 3 = superadmin
+                return redirect()->intended(route('superadmin.home'));
+            } else {  // 1 = staff
+                return redirect()->intended(route('staff.home'));
+            }
+        } else {
+            Auth::guard('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return redirect()->route('login')->with('error', 'Your account is not approved yet. Please contact the administrator.');
         }
     }
     

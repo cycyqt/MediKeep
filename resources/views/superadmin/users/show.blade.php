@@ -47,6 +47,10 @@
                             </td>
                         </tr>
                         <tr>
+                            <th>Status</th>
+                            <td>{{ ucwords($user->status) }}</td>
+                        </tr>
+                        <tr>
                             <th>Created At</th>
                             <td>{{ $user->created_at }}</td>
                         </tr>
