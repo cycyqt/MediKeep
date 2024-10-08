@@ -49,6 +49,12 @@ Route::middleware(['auth', 'loguseractivity'])->group(function () {
             Route::delete('delete_product/{id}', 'delete_product')->name('staff.delete_product');
 
             Route::get('list', 'list')->name('staff.list');
+
+            Route::get('order', 'order')->name('staff.order');
+            Route::post('add_order', 'add_order')->name('staff.add_order');
+
+            Route::get('supplier', 'supplier')->name('staff.supplier');
+            Route::post('add_supplier', 'add_supplier')->name('staff.add_supplier');
         });
     });
 

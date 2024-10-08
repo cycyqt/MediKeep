@@ -243,6 +243,7 @@
                                 <div class="card-header mb-2 p-2"> 
                                     <h3 class="card-title">Add Medicine</h3>
                                 </div>
+                                @include('message')
 
                                 <form action="{{ route('staff.add_product') }}" method="post" >
 

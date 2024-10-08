@@ -75,6 +75,7 @@
           <h3 class="card-title">Products</h3>
         </div>
 
+        @include('message')
         <div class="table-responsive">
           <table id="datatablesSimpleOne" class="table table-bordered table-hover">
             <thead>
