@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
+use Carbon\Carbon;
 
 class UserSeeder extends Seeder
 {
@@ -19,21 +20,24 @@ class UserSeeder extends Seeder
                 'email' => 'staff@staff.com',
                 'password' => bcrypt('1234'),
                 'role' => 1,
-                'status' => 'pending'
+                'status' => 'pending',
+                'email_verified_at' => null
             ],
             [
                 'name' => 'Admin',
                 'email' => 'admin@admin.com',
                 'password' => bcrypt('1234'),
                 'role' => 2,
-                'status' => 'pending'
+                'status' => 'pending',
+                'email_verified_at' => null
             ],
             [
                 'name' => 'Super Admin',
-                'email' => 'superadmin@admin.com',
+                'email' => 'ainzsama0006@gmail.com',
                 'password' => bcrypt('1234'),
                 'role' => 3,
-                'status' => 'approved'
+                'status' => 'approved',
+                'email_verified_at' => Carbon::now()
             ]
         ];
 
