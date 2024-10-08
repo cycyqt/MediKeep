@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -19,19 +18,22 @@ class UserSeeder extends Seeder
                 'name' => 'Staff',
                 'email' => 'staff@staff.com',
                 'password' => bcrypt('1234'),
-                'role' => 1
+                'role' => 1,
+                'status' => 'pending'
             ],
             [
                 'name' => 'Admin',
                 'email' => 'admin@admin.com',
                 'password' => bcrypt('1234'),
-                'role' => 2
+                'role' => 2,
+                'status' => 'pending'
             ],
             [
                 'name' => 'Super Admin',
                 'email' => 'superadmin@admin.com',
                 'password' => bcrypt('1234'),
-                'role' => 3
+                'role' => 3,
+                'status' => 'approved'
             ]
         ];
 

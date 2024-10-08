@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'status',
     ];
 
     /**
@@ -51,6 +52,21 @@ class User extends Authenticatable
         return new Attribute(
             get: fn($value) => ["staff", "admin", "superadmin"][$value]
         );
+    }
+
+    
+    /**
+     * Boot method to add model event listeners.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::updating(function ($user) {
+            if ($user->isDirty('status') && $user->status === 'rejected') {
+                $user->delete();
+            }
+        });
     }
     
 }

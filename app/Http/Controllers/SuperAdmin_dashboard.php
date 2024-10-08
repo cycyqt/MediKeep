@@ -60,8 +60,9 @@ class SuperAdmin_dashboard extends Controller
             'email' => 'required|string|email|max:255|unique:users,email,' . $id,
             'password' => 'nullable|string|min:4|confirmed',
             'role' => 'required|integer|in:1,2,3',
+            'status' => 'required|string|in:pending,approved,rejected',
         ]);
-
+    
         $user = User::findOrFail($id);
         $user->name = $request->name;
         $user->email = $request->email;
@@ -69,9 +70,10 @@ class SuperAdmin_dashboard extends Controller
             $user->password = Hash::make($request->password);
         }
         $user->role = $request->role;
+        $user->status = $request->status;
         $user->save();
-
-        return redirect()->route('superadmin.users.index')->with('success', 'User updated successfully.');
+    
+        return redirect()->route('users.index')->with('success', 'User  updated successfully.');
     }
 
     public function destroy($id)
@@ -94,7 +96,9 @@ class SuperAdmin_dashboard extends Controller
     {
         $user = User::withTrashed()->findOrFail($id);
         $user->restore();
-
-        return redirect()->route('users.index')->with('success', 'User restored successfully.');
+        $user->status = 'pending';
+        $user->save();
+    
+        return redirect()->route('users.index')->with('success', 'User restored and moved to pending status successfully.');
     }
 }

@@ -55,6 +55,14 @@
                             <option value="3" {{ $user->role == 3 ? 'selected' : '' }}>Super Admin</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select name="status" class="form-control" id="status" required>
+                            <option value="pending" {{ $user->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                            <option value="approved" {{ $user->status == 'approved' ? 'selected' : '' }}>Approved</option>
+                            <option value="rejected" {{ $user->status == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                        </select>
+                    </div>
                     <button type="submit" class="btn btn-primary">Update User</button>
                 </form>
             </div>

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('password');
             // 1=staff; 2=admin; 3=superadmin
             $table->tinyInteger('role')->default(1);
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

@@ -21,7 +21,6 @@
             </div>
         @endif
 
-
         <div class="titles">
             <div class="tab-titles">
                 <p class="tab-links" onclick="opentab('list')">List <span></span></p> 
@@ -44,10 +43,10 @@
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>ID</th>
                                                 <th>Name</th>
                                                 <th>Email</th>
                                                 <th>Role</th>
+                                                <th>Status</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -56,7 +55,6 @@
                                                 @foreach($users as $user)
                                                     <tr>
                                                         <td class="align-middle">{{ $loop->iteration }}</td>
-                                                        <td class="align-middle">{{ $user->id }}</td>
                                                         <td class="align-middle">{{ $user->name }}</td>
                                                         <td class="align-middle">{{ $user->email }}</td>
                                                         <td class="align-middle">
@@ -70,14 +68,21 @@
                                                                 Unknown
                                                             @endif
                                                         </td>
+                                                        <td class="align-middle">{{ ucwords($user->status) }}</td>
                                                         <td class="align-middle">
                                                             <div class="btn-group" role="group" aria-label="Basic example">
-                                                                <a href="{{ route('users.show', $user->id) }}" type="button" class="btn btn-secondary">Detail</a>
-                                                                <a href="{{ route('users.edit', $user->id) }}" type="button" class="btn btn-warning">Edit</a>
+                                                                <a href="{{ route('users.show', $user->id) }}" type="button" class="btn btn-secondary">
+                                                                    <i class="fas fa-info-circle"></i>
+                                                                </a>
+                                                                <a href="{{ route('users.edit', $user->id) }}" type="button" class="btn btn-warning">
+                                                                    <i class="fas fa-edit"></i>
+                                                                </a>
                                                                 <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="d-inline confirmation-form" id="confirmation-form-delete-{{ $user->id }}">
                                                                     @csrf
                                                                     @method('DELETE')
-                                                                    <button type="button" class="btn btn-danger m-0" onclick="confirmAction({{ $user->id }}, 'Are you sure you want to archive this user?', 'delete')">Archive</button>
+                                                                    <button type="button" class="btn btn-danger m-0" onclick="confirmAction({{ $user->id }}, 'Are you sure you want to archive this user?', 'delete')">
+                                                                        <i class="fas fa-archive"></i>
+                                                                    </button>
                                                                 </form>
                                                             </div>
                                                         </td>
@@ -146,6 +151,14 @@
                                             <option value="3">Super Admin</option>
                                         </select>
                                     </div>
+                                    <div class="form-group">
+                                        <label for="status">Status</label>
+                                        <select name="status" class="form-control" id="status" required>
+                                            <option value="pending">Pending</option>
+                                            <option value="active">Active</option>
+                                            <option value="rejected">Rejected</option>
+                                        </select>
+                                    </div>
                                     <button type="submit" class="btn btn-primary">Add User</button>
                                 </form>
 
@@ -170,10 +183,10 @@
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>ID</th>
                                                 <th>Name</th>
                                                 <th>Email</th>
                                                 <th>Role</th>
+                                                <th>Status</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -182,7 +195,6 @@
                                                 @foreach($archivedUsers as $user)
                                                     <tr>
                                                         <td class="align-middle">{{ $loop->iteration }}</td>
-                                                        <td class="align-middle">{{ $user->id }}</td>
                                                         <td class="align-middle">{{ $user->name }}</td>
                                                         <td class="align-middle">{{ $user->email }}</td>
                                                         <td class="align-middle">
@@ -195,20 +207,28 @@
                                                             @else
                                                                 Unknown
                                                             @endif
-                                                        </td>                                                        <td class="align-middle">
+                                                        </td>
+                                                        <td class="align-middle">{{ ucwords($user->status) }}</td>
+                                                        <td class="align-middle">
                                                             <div class="btn-group" role="group" aria-label="Basic example">
-                                                                <a href="{{ route('users.show', $user->id) }}" type="button" class="btn btn-secondary">Detail</a>
+                                                                <a href="{{ route('users.show', $user->id) }}" type="button" class="btn btn-secondary">
+                                                                    <i class="fas fa-info-circle"></i>
+                                                                </a>
 
                                                                 <form action="{{ route('users.restore', $user->id) }}" method="POST" class="d-inline confirmation-form" id="confirmation-form-restore-{{ $user->id }}">
                                                                     @csrf
                                                                     @method('PATCH')
-                                                                    <button type="button" class="btn btn-success m-0" onclick="confirmAction({{ $user->id }}, 'Are you sure you want to restore this user?', 'restore')">Restore</button>
+                                                                    <button type="button" class="btn btn-success m-0" onclick="confirmAction({{ $user->id }}, 'Are you sure you want to restore this user?', 'restore')">
+                                                                        <i class="fas fa-undo"></i>
+                                                                    </button>
                                                                 </form>
 
                                                                 <form action="{{ route('users.destroyForever', $user->id) }}" method="POST" class="d-inline confirmation-form" id="confirmation-form-deleteForever-{{ $user->id }}">
                                                                     @csrf
                                                                     @method('DELETE')
-                                                                    <button type="button" class="btn btn-danger m-0" onclick="confirmAction({{ $user->id }}, 'Are you sure you want to permanently delete this user? This action cannot be undone.', 'deleteForever')">Delete Forever</button>
+                                                                    <button type="button" class="btn btn-danger m-0" onclick="confirmAction({{ $user->id }}, 'Are you sure you want to permanently delete this user? This action cannot be undone.', 'deleteForever')">
+                                                                        <i class="fas fa-trash-alt"></i>
+                                                                    </button>
                                                                 </form>
                                                             </div>
                                                         </td>
