@@ -45,27 +45,8 @@ class UserStatusNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        $message = new MailMessage;
-
-        switch ($this->type) {
-            case 'created':
-                $message->line('Your account has been successfully created and is awaiting approval.');
-                break;
-            case 'archived':
-                $message->line('Your account has been temporarily disabled.');
-                break;
-            case 'deleted':
-                $message->line('Your account has been permanently deleted.');
-                break;
-            case 'status':
-                if ($this->status === 'approved') {
-                    $message->line('Your status has been approved.');
-                } else if ($this->status === 'rejected') {
-                    $message->line('Your status has been rejected.');
-                }
-                break;
-        }
-
-        return $message;
+        return (new \App\Mail\UserStatusMailable($this->status, $this->type, $notifiable))
+                    ->to($notifiable->email);
     }
+
 }

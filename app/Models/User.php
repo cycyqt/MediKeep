@@ -67,7 +67,7 @@ class User extends Authenticatable implements MustVerifyEmail
             $user->notify(new UserStatusNotification(null, 'created'));
     
             // Notify the superadmin when someone wants to register an account
-            $superadmin = User::where('email', 'ainzsama0006@gmail.com')->first();
+            $superadmin = User::where('email', 'cj25efren@gmail.com')->first();
             if ($superadmin) {
                 $superadmin->notify(new SuperAdminRegistrationNotification($user));
             }
@@ -98,6 +98,7 @@ class User extends Authenticatable implements MustVerifyEmail
         static::restoring(function ($user) {
             $user->status = 'pending';
             $user->save();
+            $user->notify(new UserStatusNotification(null, 'restored'));
         });
     }
 }

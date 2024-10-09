@@ -33,7 +33,7 @@ class UserSeeder extends Seeder
             // ],
             [
                 'name' => 'Super Admin',
-                'email' => 'ainzsama0006@gmail.com',
+                'email' => 'cj25efren@gmail.com',
                 'password' => bcrypt('1234'),
                 'role' => 3,
                 'status' => 'approved',

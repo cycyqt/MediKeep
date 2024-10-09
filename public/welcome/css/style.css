@@ -183,6 +183,22 @@ a#logo:hover{
     color: #fff;
     background-color: #00ffbb;
 }
+
+.btn.btn-out {
+    padding: 10px;
+    background: rgb(0, 170, 255);
+    border-radius: 50px;
+    width: 180px;
+    text-align: center;
+    color: #333333;
+    border: 1px solid white;
+    margin-right: 10px;
+}
+.btn.btn-out:hover{
+    color: #fff;
+    background-color: #ff5763;
+}
+
 .btn.btn-download i {
     width: 20px;
     font-size: 36px;

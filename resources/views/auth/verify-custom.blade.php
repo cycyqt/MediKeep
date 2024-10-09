@@ -48,6 +48,7 @@
     <div class="container">
         <div class="header">
             <h1>Verify Your Email Address</h1>
+            <img src="../assets/img/logo_1.png" alt="MediKeep Logo" style="max-width: 100%; height: auto; margin-bottom: 20px;">  
         </div>
         <div class="content">
             <p>Hello {{ $user->name }},</p>
