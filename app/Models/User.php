@@ -8,7 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Notifications\UserStatusNotification;
-use App\Notifications\SuperAdminRegistrationNotification;
+use App\Notifications\RegistrationNotification;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -67,13 +67,23 @@ class User extends Authenticatable implements MustVerifyEmail
             $user->notify(new UserStatusNotification(null, 'created'));
     
             // Notify the superadmin when someone wants to register an account
-            $superadmin = User::where('email', 'cj25efren@gmail.com')->first();
+            $superadminEmail = config('mail.superadmin_email');
+            $superadmin = User::where('email', $superadminEmail)->first();
             if ($superadmin) {
-                $superadmin->notify(new SuperAdminRegistrationNotification($user));
+                $superadmin->notify(new RegistrationNotification($user));
             }
         });
     
         static::updating(function ($user) {
+            // Check if the user's role has been updated
+            if ($user->isDirty('role')) {
+                if ($user->role === 'superadmin') {
+                    // Notify the user that they are now a superadmin
+                    $user->notify(new SuperAdminAssignedNotification($user));
+                }
+            }
+    
+            // Handle status changes
             if ($user->isDirty('status')) {
                 if ($user->status === 'rejected') {
                     $user->delete();
@@ -82,7 +92,7 @@ class User extends Authenticatable implements MustVerifyEmail
                 }
             }
         });
-    
+        
         static::deleting(function ($user) {
             if (!$user->isForceDeleting()) {
                 if ($user->status !== 'disabled') {

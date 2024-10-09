@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class SuperAdminRegistrationNotification extends Notification
+class RegistrationNotification extends Notification
 {
     use Queueable;
 
@@ -16,7 +16,7 @@ class SuperAdminRegistrationNotification extends Notification
     /**
      * Create a new notification instance.
      *
-     * @param \App\Models\User $user
+     * @param object $user
      */
     public function __construct($user)
     {
@@ -42,9 +42,7 @@ class SuperAdminRegistrationNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
-            ->line('A new user has registered and is awaiting approval.')
-            ->line('Name: ' . $this->user->name)
-            ->line('Email: ' . $this->user->email);
+        return (new \App\Mail\RegistrationMailable($this->user))
+            ->to($notifiable->email);    
     }
 }

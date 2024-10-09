@@ -47,6 +47,16 @@
                             </td>
                         </tr>
                         <tr>
+                            <th>Email Verified</th>
+                            <td>
+                                @if($user->email_verified_at)
+                                    Verified
+                                @else
+                                    Not Verified
+                                @endif
+                            </td>
+                        </tr>
+                        <tr>
                             <th>Status</th>
                             <td>{{ ucwords($user->status) }}</td>
                         </tr>

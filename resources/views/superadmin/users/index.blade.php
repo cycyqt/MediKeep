@@ -157,6 +157,14 @@
                                             <option value="pending">Pending</option>
                                             <option value="active">Active</option>
                                             <option value="rejected">Rejected</option>
+                                            <option value="disabled">Disabled</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email_verified">Verify Email</label>
+                                        <select name="email_verified" id="email_verified" class="form-control">
+                                            <option value="0" selected>Not Verified</option>
+                                            <option value="1">Verified</option>
                                         </select>
                                     </div>
                                     <button type="submit" class="btn btn-primary">Add User</button>

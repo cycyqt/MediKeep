@@ -35,18 +35,29 @@ class SuperAdmin_dashboard extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:4|confirmed',
             'role' => 'required|integer|in:1,2,3',
+            'status' => 'required|string|in:pending,approved,rejected,disabled',
+            'email_verified' => 'required|boolean',
         ]);
-
-        User::create([
+    
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role,
+            'status' => $request->status,
         ]);
-
+    
+        if ($request->email_verified == 1) {
+            $user->email_verified_at = now();
+        } else {
+            $user->email_verified_at = null;
+        }
+    
+        $user->save();
+    
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
-
+    
     public function edit($id)
     {
         $user = User::findOrFail($id);
@@ -60,7 +71,8 @@ class SuperAdmin_dashboard extends Controller
             'email' => 'required|string|email|max:255|unique:users,email,' . $id,
             'password' => 'nullable|string|min:4|confirmed',
             'role' => 'required|integer|in:1,2,3',
-            'status' => 'required|string|in:pending,approved,rejected',
+            'status' => 'required|string|in:pending,approved,rejected,disabled',
+            'email_verified' => 'required|boolean',
         ]);
     
         $user = User::findOrFail($id);
@@ -71,9 +83,16 @@ class SuperAdmin_dashboard extends Controller
         }
         $user->role = $request->role;
         $user->status = $request->status;
+    
+        if ($request->email_verified == 1) {
+            $user->email_verified_at = now();
+        } else {
+            $user->email_verified_at = null;
+        }
+    
         $user->save();
     
-        return redirect()->route('users.index')->with('success', 'User  updated successfully.');
+        return redirect()->route('users.index')->with('success', 'User updated successfully.');
     }
 
     public function destroy($id)

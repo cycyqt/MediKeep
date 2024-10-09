@@ -48,7 +48,14 @@
                             <option value="pending" {{ $user->status == 'pending' ? 'selected' : '' }}>Pending</option>
                             <option value="approved" {{ $user->status == 'approved' ? 'selected' : '' }}>Approved</option>
                             <option value="rejected" {{ $user->status == 'rejected' ? 'selected' : '' }}>Rejected</option>
-                            <option value="rejected" {{ $user->status == 'disabled' ? 'selected' : '' }}>Disabled</option>
+                            <option value="disabled" {{ $user->status == 'disabled' ? 'selected' : '' }}>Disabled</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="email_verified">Email Verification</label>
+                        <select name="email_verified" class="form-control" id="email_verified" required>
+                            <option value="0" {{ is_null($user->email_verified_at) ? 'selected' : '' }}>Not Verified</option>
+                            <option value="1" {{ !is_null($user->email_verified_at) ? 'selected' : '' }}>Verified</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary">Update User</button>
