@@ -6,6 +6,9 @@ use App\Http\Controllers\Admin_dashboard;
 use App\Http\Controllers\SuperAdmin_dashboard;
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 // Public routes
 Route::get('/', function () {
@@ -21,7 +24,7 @@ Route::fallback(function () {
     return redirect('/');
 });
 
-Route::middleware(['auth', 'loguseractivity'])->group(function () {
+Route::middleware(['auth', 'loguseractivity', 'verified'])->group(function () {
     // Profile routes
     Route::prefix('profile')->controller(ProfileController::class)->group(function () {
         Route::get('/', 'edit')->name('profile.edit');
@@ -79,6 +82,23 @@ Route::middleware(['auth', 'loguseractivity'])->group(function () {
             Route::patch('users/{id}/restore', 'restore')->name('users.restore');
         });
     });
+
+    Route::get('/email/verify', function () {
+        return view('auth.verify-email');
+    })->middleware('auth')->name('verification.notice');
+
+ 
+    Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+        $request->fulfill();
+    
+        return redirect('/home');
+    })->middleware(['auth', 'signed'])->name('verification.verify');
+
+    Route::post('/email/verification-notification', function (Request $request) {
+        $request->user()->sendEmailVerificationNotification();
+     
+        return back()->with('message', 'Verification link sent!');
+    })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 });
 
