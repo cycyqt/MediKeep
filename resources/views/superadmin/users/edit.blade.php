@@ -37,9 +37,9 @@
                     <div class="form-group">
                         <label for="role">Role</label>
                         <select name="role" class="form-control" id="role" required>
-                            <option value="1" {{ $user->role == 1 ? 'selected' : '' }}>Staff</option>
-                            <option value="2" {{ $user->role == 2 ? 'selected' : '' }}>Admin</option>
-                            <option value="3" {{ $user->role == 3 ? 'selected' : '' }}>Super Admin</option>
+                            <option value="{{ \App\Models\User::ROLE_STAFF }}" {{ $user->role == \App\Models\User::ROLE_STAFF ? 'selected' : '' }}>Staff</option>
+                            <option value="{{ \App\Models\User::ROLE_ADMIN }}" {{ $user->role == \App\Models\User::ROLE_ADMIN ? 'selected' : '' }}>Admin</option>
+                            <option value="{{ \App\Models\User::ROLE_SUPERADMIN }}" {{ $user->role == \App\Models\User::ROLE_SUPERADMIN ? 'selected' : '' }}>Super Admin</option>
                         </select>
                     </div>
                     <div class="form-group">

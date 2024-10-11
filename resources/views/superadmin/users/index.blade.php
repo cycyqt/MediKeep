@@ -58,11 +58,11 @@
                                                         <td class="align-middle">{{ $user->name }}</td>
                                                         <td class="align-middle">{{ $user->email }}</td>
                                                         <td class="align-middle">
-                                                            @if($user->role == 1)
+                                                            @if($user->role == \App\Models\User::ROLE_STAFF)
                                                                 Staff
-                                                            @elseif($user->role == 2)
+                                                            @elseif($user->role == \App\Models\User::ROLE_ADMIN)
                                                                 Admin
-                                                            @elseif($user->role == 3)
+                                                            @elseif($user->role == \App\Models\User::ROLE_SUPERADMIN)
                                                                 Super Admin
                                                             @else
                                                                 Unknown
@@ -146,16 +146,16 @@
                                     <div class="form-group">
                                         <label for="role">Role</label>
                                         <select name="role" class="form-control" id="role" required>
-                                            <option value="1">Staff</option>
-                                            <option value="2">Admin</option>
-                                            <option value="3">Super Admin</option>
+                                            <option value="{{ \App\Models\User::ROLE_STAFF }}">Staff</option>
+                                            <option value="{{ \App\Models\User::ROLE_ADMIN }}">Admin</option>
+                                            <option value="{{ \App\Models\User::ROLE_SUPERADMIN }}">Super Admin</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="status">Status</label>
                                         <select name="status" class="form-control" id="status" required>
                                             <option value="pending">Pending</option>
-                                            <option value="active">Active</option>
+                                            <option value="approved">Approved</option>
                                             <option value="rejected">Rejected</option>
                                             <option value="disabled">Disabled</option>
                                         </select>
@@ -206,11 +206,11 @@
                                                         <td class="align-middle">{{ $user->name }}</td>
                                                         <td class="align-middle">{{ $user->email }}</td>
                                                         <td class="align-middle">
-                                                            @if($user->role == 1)
+                                                            @if($user->role == \App\Models\User::ROLE_STAFF)
                                                                 Staff
-                                                            @elseif($user->role == 2)
+                                                            @elseif($user->role == \App\Models\User::ROLE_ADMIN)
                                                                 Admin
-                                                            @elseif($user->role == 3)
+                                                            @elseif($user->role == \App\Models\User::ROLE_SUPERADMIN)
                                                                 Super Admin
                                                             @else
                                                                 Unknown

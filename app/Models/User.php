@@ -9,10 +9,16 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Notifications\UserStatusNotification;
 use App\Notifications\RegistrationNotification;
+use App\Notifications\SuperAdminAssignedNotification;
+use Attribute;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable, SoftDeletes;
+
+    const ROLE_STAFF = 1;
+    const ROLE_ADMIN = 2;
+    const ROLE_SUPERADMIN = 3;
 
     /**
      * The attributes that are mass assignable.
@@ -24,6 +30,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'status',
+        'role',
     ];
 
     /**
@@ -64,35 +71,41 @@ class User extends Authenticatable implements MustVerifyEmail
         parent::boot();
     
         static::created(function ($user) {
-            $user->notify(new UserStatusNotification(null, 'created'));
+            $notifications = [];
     
-            // Notify the superadmin when someone wants to register an account
+            $notifications[] = new UserStatusNotification(null, 'created');
+    
             $superadminEmail = config('mail.superadmin_email');
             $superadmin = User::where('email', $superadminEmail)->first();
-            if ($superadmin) {
+            if ($superadmin && $user->email !== $superadminEmail) {
                 $superadmin->notify(new RegistrationNotification($user));
+            }
+    
+            foreach ($notifications as $notification) {
+                $user->notify($notification);
             }
         });
     
         static::updating(function ($user) {
-            // Check if the user's role has been updated
-            if ($user->isDirty('role')) {
-                if ($user->role === 'superadmin') {
-                    // Notify the user that they are now a superadmin
-                    $user->notify(new SuperAdminAssignedNotification($user));
-                }
-            }
+            $notifications = [];
     
-            // Handle status changes
             if ($user->isDirty('status')) {
                 if ($user->status === 'rejected') {
                     $user->delete();
                 } elseif (in_array($user->status, ['approved', 'pending'])) {
-                    $user->notify(new UserStatusNotification($user->status, 'status'));
+                    $notifications[] = new UserStatusNotification($user->status, 'status');
                 }
             }
+    
+            // if ($user->isDirty('role') && $user->role === 'superadmin') {
+            //     $notifications[] = new SuperAdminAssignedNotification($user);
+            // }
+    
+            foreach ($notifications as $notification) {
+                $user->notify($notification);
+            }
         });
-        
+    
         static::deleting(function ($user) {
             if (!$user->isForceDeleting()) {
                 if ($user->status !== 'disabled') {
@@ -110,5 +123,15 @@ class User extends Authenticatable implements MustVerifyEmail
             $user->save();
             $user->notify(new UserStatusNotification(null, 'restored'));
         });
+    }    
+
+    public function assignRole(string $role)
+    {
+        $this->role = $role;
+        $this->save();
+
+        if ($role === 'superadmin') {
+            $this->notify(new SuperAdminAssignedNotification($this));
+        }
     }
 }

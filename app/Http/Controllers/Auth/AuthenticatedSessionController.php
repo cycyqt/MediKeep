@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,11 +32,11 @@ class AuthenticatedSessionController extends Controller
         // Check the user's status and role, and redirect accordingly
         $user = $request->user();
         if ($user->status === 'approved') {
-            if ($user->role === 2) {  // 2 = admin
+            if ($user->role === User::ROLE_ADMIN) {
                 return redirect()->intended(route('admin.home'));
-            } elseif ($user->role === 3) {  // 3 = superadmin
+            } elseif ($user->role === User::ROLE_SUPERADMIN) {
                 return redirect()->intended(route('superadmin.home'));
-            } else {  // 1 = staff
+            } else { 
                 return redirect()->intended(route('staff.home'));
             }
         } else {

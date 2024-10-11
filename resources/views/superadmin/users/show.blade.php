@@ -35,11 +35,11 @@
                         <tr>
                             <th>Role</th>
                             <td>
-                                @if($user->role == 1)
+                                @if($user->role == \App\Models\User::ROLE_STAFF)
                                     Staff
-                                @elseif($user->role == 2)
+                                @elseif($user->role == \App\Models\User::ROLE_ADMIN)
                                     Admin
-                                @elseif($user->role == 3)
+                                @elseif($user->role == \App\Models\User::ROLE_SUPERADMIN)
                                     Super Admin
                                 @else
                                     Unknown
