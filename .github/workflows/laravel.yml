@@ -11,13 +11,18 @@ jobs:
     - name: 🚚 Get latest code
       uses: actions/checkout@v2
 
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+
     - name: Use Node.js 12
       uses: actions/setup-node@v2
       with:
         node-version: '12'
       
     - name: Install Composer Dependencies
-      run: composer install
+      run: composer update
 
     - name: 🔨 Build Project
       run: |
