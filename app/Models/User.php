@@ -9,8 +9,6 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Notifications\UserStatusNotification;
 use App\Notifications\RegistrationNotification;
-use App\Notifications\SuperAdminAssignedNotification;
-use Attribute;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -56,12 +54,12 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
-    protected function role(): Attribute
-    {
-        return new Attribute(
-            get: fn($value) => ["staff", "admin", "superadmin"][$value]
-        );
-    }
+    // protected function role(): Attribute
+    // {
+    //     return new Attribute(
+    //         get: fn($value) => ["staff", "admin", "superadmin"][$value]
+    //     );
+    // }
 
     /**
      * Boot method to add model event listeners.
@@ -73,12 +71,19 @@ class User extends Authenticatable implements MustVerifyEmail
         static::created(function ($user) {
             $notifications = [];
     
-            $notifications[] = new UserStatusNotification(null, 'created');
+            if ($user->status !== 'approved') {
+                $notifications[] = new UserStatusNotification(null, 'created', $user->role);
+            }
+    
+            if ($user->status === 'approved') {
+                $notifications[] = new UserStatusNotification($user->status, 'status', $user->role);
+            }
     
             $superadminEmail = config('mail.superadmin_email');
             $superadmin = User::where('email', $superadminEmail)->first();
             if ($superadmin && $user->email !== $superadminEmail) {
-                $superadmin->notify(new RegistrationNotification($user));
+                $notificationType = $user->status === 'approved' ? 'created_by_superadmin' : 'created_by_user';
+                $superadmin->notify(new RegistrationNotification($user, $notificationType));
             }
     
             foreach ($notifications as $notification) {
@@ -88,19 +93,19 @@ class User extends Authenticatable implements MustVerifyEmail
     
         static::updating(function ($user) {
             $notifications = [];
-    
+        
             if ($user->isDirty('status')) {
                 if ($user->status === 'rejected') {
                     $user->delete();
-                } elseif (in_array($user->status, ['approved', 'pending'])) {
-                    $notifications[] = new UserStatusNotification($user->status, 'status');
+                } elseif (in_array($user->status, ['approved', 'pending', 'disabled', 'rejected'])) {
+                    $notifications[] = new UserStatusNotification($user->status, 'status', $user->role);
                 }
             }
-    
-            // if ($user->isDirty('role') && $user->role === 'superadmin') {
-            //     $notifications[] = new SuperAdminAssignedNotification($user);
-            // }
-    
+        
+            if ($user->isDirty('role')) {
+                $notifications[] = new UserStatusNotification($user->role, 'role', $user->role);
+            }
+        
             foreach ($notifications as $notification) {
                 $user->notify($notification);
             }
@@ -111,27 +116,27 @@ class User extends Authenticatable implements MustVerifyEmail
                 if ($user->status !== 'disabled') {
                     $user->status = 'disabled';
                     $user->save();
-                    $user->notify(new UserStatusNotification(null, 'archived'));
+                    $user->notify(new UserStatusNotification(null, 'archived', $user->role));
                 }
             } else {
-                $user->notify(new UserStatusNotification(null, 'deleted'));
+                $user->notify(new UserStatusNotification(null, 'deleted', $user->role));
             }
         });
     
         static::restoring(function ($user) {
             $user->status = 'pending';
             $user->save();
-            $user->notify(new UserStatusNotification(null, 'restored'));
+            $user->notify(new UserStatusNotification(null, 'restored', $user->role));
         });
-    }    
-
-    public function assignRole(string $role)
-    {
-        $this->role = $role;
-        $this->save();
-
-        if ($role === 'superadmin') {
-            $this->notify(new SuperAdminAssignedNotification($this));
-        }
     }
+
+    // public function assignRole(string $role)
+    // {
+    //     $this->role = $role;
+    //     $this->save();
+
+    //     if ($role === 'superadmin') {
+    //         $this->notify(new SuperAdminAssignedNotification($this));
+    //     }
+    // }
 }

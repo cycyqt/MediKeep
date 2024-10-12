@@ -13,6 +13,7 @@ class UserStatusMailable extends Mailable
     public $status;
     public $type;
     public $user;
+    public $role;
 
     /**
      * Create a new message instance.
@@ -20,12 +21,14 @@ class UserStatusMailable extends Mailable
      * @param string $status
      * @param string $type
      * @param object $user
+     * @param string $role
      */
-    public function __construct($status, $type, $user)
+    public function __construct($status, $type, $user, $role)
     {
         $this->status = $status;
         $this->type = $type;
         $this->user = $user;
+        $this->role = $role;
     }
 
     /**
@@ -39,7 +42,8 @@ class UserStatusMailable extends Mailable
             ->with([
                 'status' => $this->status,
                 'type' => $this->type,
-                'user' => $this->user
+                'user' => $this->user,
+                'role' => $this->role
             ])
             ->subject('Your Account Status Update')
             ->from('no-reply@medikeep.com', 'Carl Ceo OF MediKeep');

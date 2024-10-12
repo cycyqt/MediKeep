@@ -46,7 +46,18 @@
             <img src="{{ $message->embed(public_path('assets/img/Logo_1.png')) }}" alt="MediKeep Logo" style="width: 50px; height: auto;">
         </div>
         <div class="content">
-            <p>A new user has registered and is awaiting approval.</p>
+            @switch($notificationType)
+                @case('created_by_superadmin')
+                    <p>The user account has been created by you and has been approved.</p>
+                    @break
+
+                @case('created_by_user')
+                    <p>A new user has registered and is awaiting approval.</p>
+                    @break
+
+                @default
+                    <p>An unknown action has occurred.</p>
+            @endswitch
             <p><strong>Name:</strong> {{ $user->name }}</p>
             <p><strong>Email:</strong> {{ $user->email }}</p>
         </div>

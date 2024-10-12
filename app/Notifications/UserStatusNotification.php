@@ -13,17 +13,20 @@ class UserStatusNotification extends Notification
 
     protected $status;
     protected $type;
+    protected $role;
 
     /**
      * Create a new notification instance.
      *
      * @param string $status
      * @param string $type
+     * @param string $role
      */
-    public function __construct($status, $type)
+    public function __construct($status, $type, $role)
     {
         $this->status = $status;
         $this->type = $type;
+        $this->role = $role;
     }
 
     /**
@@ -45,8 +48,7 @@ class UserStatusNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new \App\Mail\UserStatusMailable($this->status, $this->type, $notifiable))
+        return (new \App\Mail\UserStatusMailable($this->status, $this->type, $notifiable, $this->role))
                     ->to($notifiable->email);
     }
-
 }

@@ -64,6 +64,17 @@
                 @case('status')
                     <p>Your status has been {{ $status }}.</p>
                     @break
+                @case('role')
+                    @php
+                        $roleNames = [
+                            \App\Models\User::ROLE_STAFF => 'Staff',
+                            \App\Models\User::ROLE_ADMIN => 'Admin',
+                            \App\Models\User::ROLE_SUPERADMIN => 'Super Admin'
+                        ];
+                        $roleName = $roleNames[$role] ?? 'Unknown';
+                    @endphp
+                    <p>You have been set as {{ $roleName }}.</p>
+                    @break
             @endswitch
 
             <p>Regards,</p>

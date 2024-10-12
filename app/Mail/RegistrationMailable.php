@@ -12,15 +12,18 @@ class RegistrationMailable extends Mailable
     use Queueable, SerializesModels;
 
     public $user;
+    public $notificationType;
 
     /**
      * Create a new message instance.
      *
      * @param object $user
+     * @param string $notificationType
      */
-    public function __construct($user)
+    public function __construct($user, $notificationType)
     {
         $this->user = $user;
+        $this->notificationType = $notificationType;
     }
 
     /**
@@ -32,7 +35,8 @@ class RegistrationMailable extends Mailable
     {
         return $this->view('notification.registration-email')
             ->with([
-                'user' => $this->user
+                'user' => $this->user,
+                'notificationType' => $this->notificationType
             ])
             ->subject('New User Registration Request')
             ->from('no-reply@medikeep.com', 'Jean of MediKeep');

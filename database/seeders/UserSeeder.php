@@ -25,10 +25,6 @@ class UserSeeder extends Seeder
 
         foreach ($users as $userData) {
             $user = User::create($userData);
-            
-            if ($user->role === User::ROLE_SUPERADMIN) {
-                $user->notify(new SuperAdminAssignedNotification($user));
-            }
         }
     }
 }

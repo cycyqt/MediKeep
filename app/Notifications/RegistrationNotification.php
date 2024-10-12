@@ -12,15 +12,18 @@ class RegistrationNotification extends Notification
     use Queueable;
 
     protected $user;
+    protected $notificationType;
 
     /**
      * Create a new notification instance.
      *
      * @param object $user
+     * @param string $notificationType
      */
-    public function __construct($user)
+    public function __construct($user, $notificationType)
     {
         $this->user = $user;
+        $this->notificationType = $notificationType;
     }
 
     /**
@@ -42,7 +45,7 @@ class RegistrationNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new \App\Mail\RegistrationMailable($this->user))
-            ->to($notifiable->email);    
+        return (new \App\Mail\RegistrationMailable($this->user, $this->notificationType))
+            ->to($notifiable->email);
     }
 }
