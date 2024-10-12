@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    runs-on : ubuntu-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
@@ -21,13 +21,16 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
+      - name: Install Node.js dependencies
+        run: npm install
+
+      - name: Compile assets
+        run: npm run prod
+
       - name: Run migrations and seed database
         run: |
           php artisan migrate
           php artisan db:seed --class=Database\\Seeders\\UserSeeder
-
-      - name: Compile assets
-        run: npm run prod
 
       - name: Deploy to Server
         uses: SamKirkland/FTP-Deploy-Action@4.0.0
