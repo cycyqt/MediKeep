@@ -1,17 +1,38 @@
-on: push
-name: 🚀 Deploy website on push
+name: Deploy Laravel Project
+
+on:
+  push:
+    branches:
+      - main
+
 jobs:
-  web-deploy:
-    name: 🎉 Deploy
-    runs-on: ubuntu-latest
+  deploy:
+    runs-on : ubuntu-latest
+
     steps:
-    - name: 🚚 Get latest code
-      uses: actions/checkout@v2.3.2
-    
-    - name: 📂 Sync files
-      uses: SamKirkland/FTP-Deploy-Action@4.0.0
-      with:
-        server: ftpupload.net
-        username: if0_36689266
-        password: fxFA8QnPR5B 
-        server-dir: /htdocs/
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0' # Specify your PHP version
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Run migrations and seed database
+        run: |
+          php artisan migrate
+          php artisan db:seed --class=Database\\Seeders\\UserSeeder
+
+      - name: Compile assets
+        run: npm run prod
+
+      - name: Deploy to Server
+        uses: SamKirkland/FTP-Deploy-Action@4.0.0
+        with:
+          server: ftpupload.net
+          username: if0_36689266
+          password: fxFA8QnPR5B 
+          server-dir: /htdocs/
