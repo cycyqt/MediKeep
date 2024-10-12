@@ -22,7 +22,7 @@ jobs:
         node-version: '22'
       
     - name: Install Composer Dependencies
-      run: composer update
+      run: composer install
 
     - name: 🔨 Build Project
       run: |
