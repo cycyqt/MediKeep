@@ -88,7 +88,8 @@
                                     <button type="submit" class="btn btn-log wow animated fadeInRight">
                                         {{ __('Register') }}
                                     </button>
-
+                                    
+                                    @include('components.google-signin', ['buttonText' => 'Register with Google'])
                                   
                                 </div>
                             </form>

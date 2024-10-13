@@ -47,18 +47,12 @@
                                 <div class="form-group">
                                     <label for="email" class="form-label">{{ __('Email') }}</label>
                                     <input id="email" type="email" class="form-control" name="email" :value="old('email')" required autofocus autocomplete="username">
-                                    <!-- @if ($errors->has('email'))
-                                        <span class="text-danger">{{ $errors->first('email') }}</span>
-                                    @endif -->
                                 </div>
                     
                                 <!-- Password -->
                                 <div class="form-group mt-4">
                                     <label for="password" class="form-label">{{ __('Password') }}</label>
                                     <input id="password" type="password" class="form-control" name="password" required autocomplete="current-password">
-                                    <!-- @if ($errors->has('password'))
-                                        <span class="text-danger">{{ $errors->first('password') }}</span>
-                                    @endif -->
                                 </div>
                     
                                 <!-- Remember Me -->
@@ -80,6 +74,8 @@
                                     </button>
                                 </div>
                             </form>
+
+                            @include('components.google-signin', ['buttonText' => 'Sign in with Google'])
                         </div> 
                     </div> <!-- /.banner-text -->
                 </div>

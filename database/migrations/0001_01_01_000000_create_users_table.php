@@ -20,6 +20,7 @@ return new class extends Migration
             // 1=staff; 2=admin; 3=superadmin
             $table->tinyInteger('role')->default(1);
             $table->enum('status', ['pending', 'approved', 'rejected', 'disabled'])->default('pending');
+            $table->string('google_id')->nullable()->after('email');
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
