@@ -26,6 +26,12 @@
                 <div class="col-md-8 offset-md-2">
                     <div class="card mb-4">
                         <div class="card-body">
+                            @include('profile.partials.image-user-form')
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-body">
                             @include('profile.partials.update-profile-information-form')
                         </div>
                     </div>

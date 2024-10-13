@@ -31,6 +31,7 @@ Route::middleware(['auth', 'loguseractivity', 'verified', 'autologout'])->group(
         Route::get('/', 'edit')->name('profile.edit');
         Route::patch('/', 'update')->name('profile.update');
         Route::delete('/', 'destroy')->name('profile.destroy');
+        Route::patch('/profile/image', 'updateProfileImage')->name('profile.update.image');
     });
     
 
