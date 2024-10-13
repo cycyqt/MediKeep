@@ -24,7 +24,7 @@ Route::fallback(function () {
     return redirect('/');
 });
 
-Route::middleware(['auth', 'loguseractivity', 'verified'])->group(function () {
+Route::middleware(['auth', 'loguseractivity', 'verified', 'autologout'])->group(function () {
     // Profile routes
     Route::prefix('profile')->controller(ProfileController::class)->group(function () {
         Route::get('/', 'edit')->name('profile.edit');

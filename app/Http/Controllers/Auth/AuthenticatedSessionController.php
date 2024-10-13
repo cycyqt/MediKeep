@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
@@ -25,28 +26,33 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
-        
+        // Validate the login credentials
+        $credentials = $request->only('email', 'password');
+        $user = User::where('email', $credentials['email'])->first();
+
+        if (!$user || !Hash::check($credentials['password'], $user->password)) {
+            return redirect()->route('login')->withErrors(['email' => 'The provided credentials are incorrect.']);
+        }
+
+        if ($user->status !== 'approved') {
+            return redirect()->route('login')->withErrors(['email' => 'Unable to login. Your status is ' . $user->status . '.']);
+        }
+
+        // Authenticate the user
+        Auth::attempt($credentials);
+
         $request->session()->regenerate();
-        
-        // Check the user's status and role, and redirect accordingly
-        $user = $request->user();
-        if ($user->status === 'approved') {
-            if ($user->role === User::ROLE_ADMIN) {
-                return redirect()->intended(route('admin.home'));
-            } elseif ($user->role === User::ROLE_SUPERADMIN) {
-                return redirect()->intended(route('superadmin.home'));
-            } else { 
-                return redirect()->intended(route('staff.home'));
-            }
+
+        // Check the user's role and redirect accordingly
+        if ($user->role === User::ROLE_ADMIN) {
+            return redirect()->intended(route('admin.home'));
+        } elseif ($user->role === User::ROLE_SUPERADMIN) {
+            return redirect()->intended(route('superadmin.home'));
         } else {
-            Auth::guard('web')->logout();
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
-            return redirect()->route('login')->with('error', 'Your account is not approved yet. Please contact the administrator.');
+            return redirect()->intended(route('staff.home'));
         }
     }
-    
+
     /**
      * Destroy an authenticated session.
      */

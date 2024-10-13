@@ -78,6 +78,10 @@ class User extends Authenticatable implements MustVerifyEmail
             if ($user->status === 'approved') {
                 $notifications[] = new UserStatusNotification($user->status, 'status', $user->role);
             }
+
+            if ($user->isDirty('role')) {
+                $notifications[] = new UserStatusNotification($user->role, 'role', $user->role);
+            }
     
             $superadminEmail = config('mail.superadmin_email');
             $superadmin = User::where('email', $superadminEmail)->first();
@@ -129,14 +133,4 @@ class User extends Authenticatable implements MustVerifyEmail
             $user->notify(new UserStatusNotification(null, 'restored', $user->role));
         });
     }
-
-    // public function assignRole(string $role)
-    // {
-    //     $this->role = $role;
-    //     $this->save();
-
-    //     if ($role === 'superadmin') {
-    //         $this->notify(new SuperAdminAssignedNotification($this));
-    //     }
-    // }
 }
