@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use App\Http\Controllers\Auth\GoogleAuthController;
 
 // Public routes
 Route::get('/', function () {
@@ -24,7 +25,7 @@ Route::fallback(function () {
     return redirect('/');
 });
 
-Route::middleware(['auth', 'loguseractivity', 'verified'])->group(function () {
+Route::middleware(['auth', 'loguseractivity', 'verified', 'autologout'])->group(function () {
     // Profile routes
     Route::prefix('profile')->controller(ProfileController::class)->group(function () {
         Route::get('/', 'edit')->name('profile.edit');
@@ -102,6 +103,9 @@ Route::middleware(['auth', 'loguseractivity', 'verified'])->group(function () {
 
 });
 
+
+Route::get('auth/google/redirect', [GoogleAuthController::class, 'redirectToGoogle'])->name('auth.google.redirect');
+Route::get('auth/google/callback', [GoogleAuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 
 
 require __DIR__.'/auth.php';

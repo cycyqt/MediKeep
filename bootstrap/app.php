@@ -12,13 +12,12 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'user-role' =>  \App\Http\Middleware\RoleMiddleWare::class,
+            'user-role' =>  \App\Http\Middleware\RoleMiddleware::class,
             'superadmin' => \App\Http\Middleware\LogViewerAuth::class,
             'loguseractivity' => \App\Http\Middleware\LogUserActivity::class,
-            
+            'autologout' => \App\Http\Middleware\AutoLogout::class,            
         ]);
         $middleware->web(append: [
-            \App\Http\Middleware\AutoLogout::class,
         ]);
     })
     

@@ -29,6 +29,12 @@ jobs:
         npm install
         npm run build
     
+    - name: Delete existing database.sqlite
+      run: |
+        if [ -f database/database.sqlite ]; then
+          rm database/database.sqlite
+        fi
+        
     - name: Run Migrations and Seeders
       run: |
         php artisan migrate --force

@@ -26,7 +26,12 @@ class LogUserActivity
         $timestamp = now()->format('Y-m-d H:i:s');
         $action = $this->getAction($request);
         $details = $this->getDetails($request, $response);
-        Log::info("User {$user->id} ({$user->name}) performed action '{$action}' at {$timestamp} with details: {$details}");
+
+        if ($user) {
+            Log::info("User {$user->id} ({$user->name}) performed action '{$action}' at {$timestamp} with details: {$details}");
+        } else {
+            Log::info("Unauthenticated action '{$action}' at {$timestamp} with details: {$details}");
+        }
     }
 
     protected function getAction(Request $request)
