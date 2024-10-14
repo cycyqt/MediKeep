@@ -47,9 +47,10 @@
                     </button>
 
                     <!-- Save Button -->
-                    <button id="btn" class="btn btn-primary profile-button me-md-3 mb-2 mb-md-0" type="submit">
-                        <i class="fas fa-save"></i> {{ __('Save') }}
-                    </button>
+                    <button id="btn" class="btn btn-primary profile-button me-md-3 mb-2 mb-md-0" type="submit" disabled>
+    <i class="fas fa-save"></i> {{ __('Save') }}
+</button>
+
                 </div>
             </form>
 
@@ -81,7 +82,8 @@
             var img = document.getElementById('newImagePreview');
             img.src = reader.result;
             img.style.display = 'block';
-            document.getElementById('arrow').style.display = 'block'; // Show the arrow
+            document.getElementById('arrow').style.display = 'block';
+            document.getElementById('btn').disabled = false;
         };
         reader.readAsDataURL(input.files[0]);
     }

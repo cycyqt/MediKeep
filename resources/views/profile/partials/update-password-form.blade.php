@@ -9,7 +9,7 @@
         </p>
     </header>
 
-    <form method="post" action="{{ route('password.update') }}" class="mt-4">
+    <form method="post" action="{{ route('profile.updatePassword') }}" class="mt-4">
         @csrf
         @method('put')
 
@@ -41,7 +41,7 @@
             <button type="submit" class="btn btn-primary">
                 <i class="fas fa-save"></i> {{ __('Save') }}
             </button>
-            @if (session('status') === 'password-updated')
+            @if (session('success') === 'password-updated')
                 <p
                     x-data="{ show: true }"
                     x-show="show"
