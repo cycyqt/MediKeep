@@ -50,5 +50,4 @@
 
         gtag('config', 'G-2VC6FKHTT6');
     </script>
-    <body class="g-sidenav-show  bg-gray-100">
         

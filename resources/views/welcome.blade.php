@@ -19,15 +19,16 @@
         <div class="container">
             <div class="starting">
                 <div class="row">
-                    <div class="col-md-6">
-                        <img src="welcome/invM.png" alt="LUCY" class="wow flipInY animated animated" style="width:70%; margin-top:50px; margin-left:50px; ">
-                    </div>
+                    @include('components.welcome-invm-img')
                     <div class="col-md-6">
                         <div class="banner-text">
                             <h2 class="animation-box wow bounceIn animated"><strong class="strong">One touch for</strong><br>
                                 seamless inventory management</h2>
                             <p>
-                                MediKeep has simplified medicine inventory management for countless healthcare providers, ensuring that essential supplies are always on hand. Join the growing community of users who trust MediKeep to streamline their operations and enhance patient care. <br > <br>
+                                MediKeep has simplified medicine inventory management for countless 
+                                healthcare providers, ensuring that essential supplies are always 
+                                on hand. Join the growing community of users who trust MediKeep to 
+                                streamline their operations and enhance patient care. <br > <br>
                             @if (Route::has('login'))
                                 @auth
                                     <a href="{{ url('staff/home') }}" class="btn btn-download wow animated fadeInLeft">

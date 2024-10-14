@@ -76,10 +76,13 @@ p{
 /*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
 HH				Header
 HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
-.header{
-	height: 100vh;
-	background: linear-gradient(50deg, rgb(81, 255, 182), rgb(87, 160, 255));
-    padding: 45px 0px;
+.header {
+    background: linear-gradient(50deg, rgb(81, 255, 182), rgb(87, 160, 255));
+    padding: 45px 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 #logo {
 	font-size: 80px;

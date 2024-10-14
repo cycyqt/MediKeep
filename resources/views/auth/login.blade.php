@@ -17,14 +17,13 @@
     <div class="container">
         <div class="starting">
             <div class="row">
-                <div class="col-md-6">
-                    <img src="welcome/invM.png" alt="LUCY" class="wow flipInY animated animated" style="width:70%; margin-top:50px; margin-left:50px; ">
-                </div>
-                <div class="col-md-4">
+                @include('components.welcome-invm-img')
+                <div class="col-md-6 col-lg-4">
                     <div class="banner-text">
                         <!-- Session Status -->
-                        <div class="card p-5 " style="border-radius: 15px;">
+                        <div class="card p-5 shadow-lg" style="border-radius: 15px; background-color: #f9f9f9;">
                             <x-auth-session-status class="mb-4" :status="session('status')" />
+                            <h3 class="text-center mb-2">{{ __('Login') }}</h3>
 
                             <!-- Display Error Messages -->
                             @if ($errors->any())
@@ -43,13 +42,13 @@
                                 <!-- Email Address -->
                                 <div class="form-group">
                                     <label for="email" class="form-label">{{ __('Email') }}</label>
-                                    <input id="email" type="email" class="form-control" name="email" :value="old('email')" required autofocus autocomplete="username">
+                                    <input id="email" type="email" class="form-control mt-1" name="email" :value="old('email')" required autofocus autocomplete="username">
                                 </div>
                     
                                 <!-- Password -->
                                 <div class="form-group mt-4">
                                     <label for="password" class="form-label">{{ __('Password') }}</label>
-                                    <input id="password" type="password" class="form-control" name="password" required autocomplete="current-password">
+                                    <input id="password" type="password" class="form-control mt-1" name="password" required autocomplete="current-password">
                                 </div>
                     
                                 <!-- Remember Me -->
@@ -59,20 +58,23 @@
                                 </div>
                     
                                 <!-- Forgot Password & Login Button -->
-                                <div class="d-flex justify-content-between mt-4">
+                                <div class="d-flex justify-content-between align-items-center mt-4">
                                     @if (Route::has('password.request'))
-                                        <a class="text-sm text-decoration-underline" href="{{ route('password.request') }}">
+                                        <a class="text-sm text-muted text-decoration-underline" href="{{ route('password.request') }}">
                                             {{ __('Forgot your password?') }}
                                         </a>
                                     @endif
                     
-                                    <button type="submit" class="btn btn-log wow animated fadeInRight">
+                                    <button type="submit" class="btn btn-primary shadow wow animated fadeInRight">
                                         {{ __('Log in') }}
                                     </button>
                                 </div>
                             </form>
 
-                            @include('components.google-signin', ['buttonText' => 'Sign in with Google'])
+                            <!-- Google Sign-In -->
+                            <div class="mt-4 text-center">
+                                @include('components.google-signin', ['buttonText' => 'Sign in with Google'])
+                            </div>
                         </div> 
                     </div> <!-- /.banner-text -->
                 </div>
