@@ -19,7 +19,9 @@
         <div class="container">
             <div class="starting">
                 <div class="row">
-                    @include('components.welcome-invm-img')
+                    <div class="col-md-6">
+                        <img src="welcome/invM.png" alt="LUCY" class="wow flipInY animated animated" style="width:70%; margin-top:50px; margin-left:50px; ">
+                    </div>
                     <div class="col-md-6">
                         <div class="banner-text">
                             <h2 class="animation-box wow bounceIn animated"><strong class="strong">One touch for</strong><br>

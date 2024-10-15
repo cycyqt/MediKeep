@@ -6,7 +6,7 @@
         <div class="container">
             <div class="navigation" id="navigation-scroll">
                     <div class="row">
-                        <div class="col-md-11 col-xs-10">
+                        <div class="col-md-7 col-xs-10">
                             @include('components.logo')
                         </div>
                     </div><!-- /.row -->
