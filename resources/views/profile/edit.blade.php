@@ -24,6 +24,29 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-8 offset-md-2">
+
+                    @if(Session::has('success'))
+                        <div class="alert alert-success" role="alert">
+                            {{ Session::get('success') }}
+                        </div>
+                    @endif
+
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            @include('profile.partials.image-user-form')
+                        </div>
+                    </div>
+
                     <div class="card mb-4">
                         <div class="card-body">
                             @include('profile.partials.update-profile-information-form')

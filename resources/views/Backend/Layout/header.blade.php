@@ -23,7 +23,11 @@
           <ul class="navbar-nav  justify-content-end">
             <li class="nav-item d-flex align-items-center">
                 <a href="{{ route('profile.edit') }}" class="nav-link text-body font-weight-bold px-0">
-                    <img class="nav-img me-sm-1" src="../assets/img/cj.png" alt="User Logo" height="30" width="30">
+                    @if(auth()->user()->profile_image)
+                        <img src="{{ asset('profile_images/' . auth()->user()->profile_image) }}" class="img-fluid rounded-circle profile-image" alt="Update Profile" style="width: 30px; height: 30px;">
+                    @else
+                        <img src="{{ asset('assets/img/cj.png') }}" class="img-fluid rounded-circle profile-image" alt="Update Profile" style="width: 30px; height: 30px;">
+                    @endif
                     <span class="d-sm-inline d-none">{{ Auth::user()->name }} </span>
                 </a>
             </li>

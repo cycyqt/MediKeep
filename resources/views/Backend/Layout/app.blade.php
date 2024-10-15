@@ -20,8 +20,4 @@
         </main>
         @include('Backend.Layout.common-end')
         @stack('custom-scripts')
-
-    
-    </body>
-
 </html>

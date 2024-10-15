@@ -14,7 +14,9 @@
         class="btn btn-danger mt-3"
         data-bs-toggle="modal"
         data-bs-target="#confirm-user-deletion"
-    >{{ __('Delete Account') }}</button>
+    >
+        <i class="fas fa-trash-alt"></i> {{ __('Delete Account') }}
+    </button>
 
     <div class="modal fade" id="confirm-user-deletion" tabindex="-1" aria-labelledby="confirm-user-deletion-label" aria-hidden="true">
         <div class="modal-dialog">
@@ -43,8 +45,12 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
-                        <button type="submit" class="btn btn-danger">{{ __('Delete Account') }}</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times"></i> {{ __('Cancel') }}
+                        </button>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> {{ __('Delete Account') }}
+                        </button>
                     </div>
                 </form>
             </div>

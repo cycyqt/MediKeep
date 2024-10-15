@@ -52,8 +52,9 @@
         </div>
 
         <div class="d-flex align-items-center gap-4">
-            <button type="submit" class="btn btn-primary">{{ __('Save') }}</button>
-
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> {{ __('Save') }}
+            </button>
             @if (session('status') === 'profile-updated')
                 <p
                     x-data="{ show: true }"
