@@ -44,7 +44,7 @@
         
 
 
-        <main class="main-content">
+        <main class="main-content header">
 
                 @section('main-content')
                 @show
