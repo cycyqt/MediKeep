@@ -71,11 +71,12 @@ return [
     |
     */
 
+    //log-viewer-role is the middleware that checks if the user have the role to access the log-viewer
     'middleware' => [
         'web',
         \Opcodes\LogViewer\Http\Middleware\AuthorizeLogViewer::class,
         'auth',
-        'superadmin',
+        'log-viewer-role',
     ],
 
     /*
