@@ -3,7 +3,7 @@
 @section('main-content')   
 
 
-    <section id="header">
+    <section id="header" class="header">
         <div class="top-bar">
             <div class="container">
                 <div class="navigation" id="navigation-scroll">
