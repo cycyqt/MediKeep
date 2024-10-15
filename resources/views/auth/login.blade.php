@@ -5,20 +5,20 @@
     <div class="top-bar">
         <div class="container">
             <div class="navigation" id="navigation-scroll">
-                <div class="row">
-                    <div class="col-md-11 col-xs-10">
-                        @include('components.logo')
-                    </div>
-                </div><!-- /.row -->
-            </div><!-- /.navigation -->
-        </div><!--/.container-->
-    </div><!--/.top-bar-->
+                    <div class="row">
+                        <div class="col-md-7 col-xs-10">
+                            @include('components.logo')
+                        </div>
+                    </div><!-- /.row -->
+                </div><!-- /.navigation -->
+            </div><!--/.container-->
+        </div><!--/.top-bar-->
 
     <div class="container">
         <div class="starting">
             <div class="row">
                 <div class="col-md-6">
-                    <img src="welcome/invM.png" alt="LUCY" class="wow flipInY animated animated" style="width:70%; margin-top:50px; margin-left:50px; ">
+                    <img src="welcome/invM.png" alt="Medikeep" class="wow flipInY animated animated" style="width:70%; margin-top:50px; margin-left:50px; ">
                 </div>
                 <div class="col-md-4">
                     <div class="banner-text">
