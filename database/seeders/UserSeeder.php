@@ -2,10 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
-use App\Notifications\SuperAdminAssignedNotification;
 use Carbon\Carbon;
 
 class UserSeeder extends Seeder
@@ -14,17 +12,17 @@ class UserSeeder extends Seeder
     {
         $users = [
             [
-                'name' => 'Super Admin',
-                'email' => config('mail.superadmin_email'),
-                'password' => bcrypt('1234'),
-                'role' => User::ROLE_SUPERADMIN, 
+                'name' => 'Admin',
+                'email' => 'medikeepteam@gmail.com',
+                'password' => bcrypt('medikeepadmin'),
+                'role' => User::ROLE_ADMIN, 
                 'status' => 'approved',
-                'email_verified_at' => Carbon::now()
+                'email_verified_at' => Carbon::now(),
             ]
         ];
 
         foreach ($users as $userData) {
-            $user = User::create($userData);
+            User::create($userData);
         }
     }
 }

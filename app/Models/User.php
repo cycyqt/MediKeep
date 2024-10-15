@@ -57,27 +57,20 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
-    // protected function role(): Attribute
-    // {
-    //     return new Attribute(
-    //         get: fn($value) => ["staff", "admin", "superadmin"][$value]
-    //     );
-    // }
-
     /**
      * Boot method to add model event listeners.
      */
     protected static function boot()
     {
         parent::boot();
-    
+
         static::created(function ($user) {
             $notifications = [];
-    
+
             if ($user->status !== 'approved') {
                 $notifications[] = new UserStatusNotification(null, 'created', $user->role);
             }
-    
+
             if ($user->status === 'approved') {
                 $notifications[] = new UserStatusNotification($user->status, 'status', $user->role);
             }
@@ -85,22 +78,23 @@ class User extends Authenticatable implements MustVerifyEmail
             if ($user->isDirty('role')) {
                 $notifications[] = new UserStatusNotification($user->role, 'role', $user->role);
             }
-    
-            $superadminEmail = config('mail.superadmin_email');
-            $superadmin = User::where('email', $superadminEmail)->first();
-            if ($superadmin && $user->email !== $superadminEmail) {
-                $notificationType = $user->status === 'approved' ? 'created_by_superadmin' : 'created_by_user';
-                $superadmin->notify(new RegistrationNotification($user, $notificationType));
+
+            // Notify admin about the new user creation
+            $adminEmail = config('mail.admin_email');
+            $admin = User::where('email', $adminEmail)->first();
+            if ($admin && $user->email !== $adminEmail) {
+                $notificationType = $user->status === 'approved' ? 'created_by_admin' : 'created_by_user';
+                $admin->notify(new RegistrationNotification($user, $notificationType));
             }
-    
+
             foreach ($notifications as $notification) {
                 $user->notify($notification);
             }
         });
-    
+
         static::updating(function ($user) {
             $notifications = [];
-        
+
             if ($user->isDirty('status')) {
                 if ($user->status === 'rejected') {
                     $user->delete();
@@ -108,16 +102,16 @@ class User extends Authenticatable implements MustVerifyEmail
                     $notifications[] = new UserStatusNotification($user->status, 'status', $user->role);
                 }
             }
-        
+
             if ($user->isDirty('role')) {
                 $notifications[] = new UserStatusNotification($user->role, 'role', $user->role);
             }
-        
+
             foreach ($notifications as $notification) {
                 $user->notify($notification);
             }
         });
-    
+
         static::deleting(function ($user) {
             if (!$user->isForceDeleting()) {
                 if ($user->status !== 'disabled') {
@@ -129,7 +123,7 @@ class User extends Authenticatable implements MustVerifyEmail
                 $user->notify(new UserStatusNotification(null, 'deleted', $user->role));
             }
         });
-    
+
         static::restoring(function ($user) {
             $user->status = 'pending';
             $user->save();
