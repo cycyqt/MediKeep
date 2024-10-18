@@ -2,7 +2,7 @@
 <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3" id="sidenav-main">
     @include('components.sidenav-logo')
     <hr class="horizontal dark mt-0">
-    <div class="collapse navbar-collapse w-auto max-height-vh-100 h-100" id="sidenav-collapse-main">
+    <div class="collapse navbar-collapse  w-auto  max-height-vh-70 h-100"id="sidenav-collapse-main">
         <ul class="navbar-nav">
             @include('components.nav-link', [
                 'route' => 'admin.home',

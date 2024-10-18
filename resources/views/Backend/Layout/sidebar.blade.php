@@ -126,7 +126,7 @@
           </svg>',
           'label' => 'Profile'
         ])
-
+    </div>
 
         
       
