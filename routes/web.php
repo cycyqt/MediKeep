@@ -13,6 +13,19 @@ use App\Http\Controllers\Auth\GoogleAuthController;
 
 // Public routes
 Route::get('/', function () {
+    if (Auth::check()) {
+        $role = Auth::user()->role;
+
+        switch ($role) {
+            case 1:
+                return redirect()->route('staff.home');
+            case 2:
+                return redirect()->route('admin.home');
+            case 3:
+                return redirect()->route('superadmin.home');
+        }
+    }
+
     return view('welcome');
 });
 
@@ -26,6 +39,7 @@ Route::fallback(function () {
 });
 
 Route::middleware(['auth', 'loguseractivity', 'verified', 'autologout'])->group(function () {
+
     // Profile routes
     Route::prefix('profile')->controller(ProfileController::class)->group(function () {
         Route::get('/', 'edit')->name('profile.edit');
@@ -75,6 +89,10 @@ Route::middleware(['auth', 'loguseractivity', 'verified', 'autologout'])->group(
         Route::prefix('admin')->controller(Admin_dashboard::class)->group(function () {
             Route::get('home', 'home')->name('admin.home');
         });
+
+        // Activity logs
+        Route::get('activity-logs', [App\Http\Controllers\ActivityLogController::class, 'index'])
+        ->name('activity.logs');
     });
 
     // Super Admin dashboard routes
