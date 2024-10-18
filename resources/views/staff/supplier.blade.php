@@ -51,7 +51,11 @@
             </div>
             
         </div>
+
+    
     </div>
+    <!-- footer -->
+    @include('components.footer')
 
 
 @endsection

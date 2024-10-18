@@ -56,8 +56,14 @@ Route::middleware(['auth', 'loguseractivity', 'verified', 'autologout'])->group(
 
             Route::get('list', 'list')->name('staff.list');
 
-            Route::get('order', 'order')->name('staff.order');
+            Route::get('order', 'order')->name('order.order');
             Route::post('add_order', 'add_order')->name('staff.add_order');
+
+            Route::get('orderlist', 'orderlist')->name('order.orderlist');
+            Route::get('order/{id}', 'ordershow')->name('order.ordershow');  
+            Route::get('/order/{id}/edit', 'orderedit')->name('order.orderedit');
+            Route::put('/order/{id}', 'orderupdate')->name('order.orderupdate');
+            Route::delete('order/{id}', 'orderdelete')->name('order.orderdelete');
 
             Route::get('supplier', 'supplier')->name('staff.supplier');
             Route::post('add_supplier', 'add_supplier')->name('staff.add_supplier');

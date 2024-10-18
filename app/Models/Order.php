@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
+
 
 class Order extends Model
 {
@@ -19,10 +21,19 @@ class Order extends Model
         'status',
     ];
 
+    protected $casts = [
+        'order_date' => 'datetime',
+    ];
+
     // Define the relationship with OrderItem
     public function items()
     {
-        return $this->hasMany(OrderItem::class);
+        return $this->hasMany(Order_item::class);
+    }
+
+    public function getOrderDateAttribute($value)
+    {
+        return Carbon::parse($value)->format('Y-m-d');
     }
 
     // Define the relationship with Supplier
