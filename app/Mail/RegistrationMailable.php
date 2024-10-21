@@ -39,6 +39,6 @@ class RegistrationMailable extends Mailable
                 'notificationType' => $this->notificationType
             ])
             ->subject('New User Registration Request')
-            ->from('no-reply@medikeep.com', 'Jean of MediKeep');
+            ->from('no-reply@medikeep.com', 'Team MediKeep');
     }
 }

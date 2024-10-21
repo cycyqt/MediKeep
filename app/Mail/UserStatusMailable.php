@@ -46,6 +46,6 @@ class UserStatusMailable extends Mailable
                 'role' => $this->role
             ])
             ->subject('Your Account Status Update')
-            ->from('no-reply@medikeep.com', 'Carl Ceo OF MediKeep');
+            ->from('no-reply@medikeep.com', 'Team MediKeep');
     }
 }
