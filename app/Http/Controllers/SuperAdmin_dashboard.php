@@ -4,120 +4,39 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use App\Models\Category;
 
 class SuperAdmin_dashboard extends Controller
 {
-    public function home()
+    public function home ()
     {
-        $totalUsers = User::count();
-        return view('superadmin.home', compact('totalUsers'));
+        return view('superadmin.home');
+    }
+    public function add ()
+    
+    {
+        $categories = Category::all();
+        return view('superadmin.add',compact('categories'));
     }
 
-    public function index()
+    public function add_category (Request $request)
     {
-        $users = User::orderBy('created_at', 'DESC')->get();
-        $archivedUsers = User::onlyTrashed()->orderBy('created_at', 'DESC')->get();
-        return view('superadmin.users.index', compact('users', 'archivedUsers'));
+        $insertRecord = new Category;
+        $insertRecord->name = trim($request->name);
+        $insertRecord->save();
+        return redirect()->back()->with('success', "Business Record Successfully Add");
     }
 
-    public function show($id)
+    public function delete_category ($id)
     {
-        $user = User::withTrashed()->findOrFail($id);
-        return view('superadmin.users.show', compact('user'));
-    }
-    
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:4|confirmed',
-            'role' => 'required|integer|in:1,2,3',
-            'status' => 'required|string|in:pending,approved,rejected,disabled',
-            'email_verified' => 'required|boolean',
-        ]);
-    
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => $request->role,
-            'status' => $request->status,
-        ]);
-    
-        if ($request->email_verified == 1) {
-            $user->email_verified_at = now();
-        } else {
-            $user->email_verified_at = null;
-        }
-    
-        $user->save();
-    
-        return redirect()->route('users.index')->with('success', 'User created successfully.');
-    }
-    
-    public function edit($id)
-    {
-        $user = User::findOrFail($id);
-        return view('superadmin.users.edit', compact('user'));
+        $deleteRecord =  Category::find($id);
+        $deleteRecord->delete();
+        return redirect()->back()->with('success', "Business Record Successfully Add");
     }
 
-    public function update(Request $request, $id)
+    public function list ()
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
-            'password' => 'nullable|string|min:4|confirmed',
-            'role' => 'required|integer|in:1,2,3',
-            'status' => 'required|string|in:pending,approved,rejected,disabled',
-            'email_verified' => 'required|boolean',
-        ]);
-    
-        $user = User::findOrFail($id);
-        $user->name = $request->name;
-        $user->email = $request->email;
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
-        }
-        $user->role = $request->role;
-        $user->status = $request->status;
-    
-        if ($request->email_verified == 1) {
-            $user->email_verified_at = now();
-        } else {
-            $user->email_verified_at = null;
-        }
-    
-        $user->save();
-    
-        return redirect()->route('users.index')->with('success', 'User updated successfully.');
+        return view('superadmin.list');
     }
 
-    public function destroy($id)
-    {
-        $user = User::findOrFail($id);
-        $user->delete();
-
-        return redirect()->route('users.index')->with('success', 'User archived successfully.');
-    }
-        
-    public function destroyForever($id)
-    {
-        $user = User::withTrashed()->findOrFail($id);
-        $user->forceDelete();
-    
-        return redirect()->route('users.index')->with('success', 'User permanently deleted.');
-    }
-
-    public function restore($id)
-    {
-        $user = User::withTrashed()->findOrFail($id);
-        $user->restore();
-        $user->status = 'pending';
-        $user->save();
-    
-        return redirect()->route('users.index')->with('success', 'User restored and moved to pending status successfully.');
-    }
 }

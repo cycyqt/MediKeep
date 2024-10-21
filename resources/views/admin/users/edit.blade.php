@@ -1,4 +1,4 @@
-@extends('superadmin.Backend.Layout.app')
+@extends('admin.Backend.Layout.app')
 @section('breadcrumb', 'Edit User')
 @section('title', 'Edit user')
 
