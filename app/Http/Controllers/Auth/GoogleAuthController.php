@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class GoogleAuthController extends Controller
 {
@@ -27,10 +28,10 @@ class GoogleAuthController extends Controller
                     'email' => $google_user->getEmail(),
                     'google_id' => $google_user->getId(),
                     'email_verified_at' => now(),
-                    'password' => bcrypt("1234"), // Use a random password instead
+                    'password' => bcrypt(Str::random(8)),
                     'role' => User::ROLE_STAFF,
                     'status' => 'pending',
-                    'profile_image' => $google_user->getAvatar(), // Ensure this matches your DB field
+                    'profile_image' => $google_user->getAvatar(),
                 ]);
 
                 return redirect()->route('login')->withErrors(['email' => 'Unable to login. Account is not approved.']);
@@ -39,11 +40,10 @@ class GoogleAuthController extends Controller
                     Auth::login($user);
                     
                     if (!$user->profile_image) {
-                        $user->profile_image= $google_user->getAvatar();
+                        $user->profile_image = $google_user->getAvatar();
                         $user->save();
                     }
 
-                    // Redirect based on role
                     switch ($user->role) {
                         case User::ROLE_ADMIN:
                             return redirect()->intended(route('admin.home'));
