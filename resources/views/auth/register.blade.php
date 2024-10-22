@@ -52,7 +52,7 @@
                                 </div>
 
                                 <!-- Google Sign-In -->
-                                <div class="mt-4 text-center">
+                                <div class="mt-4 text-center" href="{{ route('google-auth') }}">
                                     @include('components.google-signin', ['buttonText' => 'Register with Google'])
                                 </div>
                             </form>

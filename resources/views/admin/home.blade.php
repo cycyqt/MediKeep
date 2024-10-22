@@ -2,7 +2,7 @@
 @section('breadcrumb', 'Home')
 @section('title', 'Admin')
 
-@section('main-content')  
+@section('main-content')
     <div class="py-1">
         <div class="max-w-7xl mx-auto sm:px-4 lg:px-6">
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"> 
