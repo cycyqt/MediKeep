@@ -15,7 +15,7 @@
                 @if(auth()->user()->profile_image)
                     <img id="currentImage" src="{{ asset('profile_images/' . auth()->user()->profile_image) }}" class="img-fluid rounded-circle profile-image" alt="Current Profile" style="max-width: 200px;">
                 @else
-                    <img id="currentImage" src="{{ asset('assets/img/cj.png') }}" class="img-fluid rounded-circle profile-image" alt="Current Profile" style="max-width: 200px;">
+                    <img id="currentImage" src="{{ asset('assets/img/default.png') }}" class="img-fluid rounded-circle profile-image" alt="Current Profile" style="max-width: 200px;">
                 @endif
             </div>
 
@@ -24,7 +24,7 @@
             </div>
 
             <div class="d-inline-block">
-                <img id="newImagePreview" src="{{ asset('assets/img/cj.png') }}" class="img-fluid rounded-circle profile-image" alt="New Profile" style="max-width: 200px; display: none;">
+                <img id="newImagePreview" src="{{ asset('assets/img/default.png') }}" class="img-fluid rounded-circle profile-image" alt="New Profile" style="max-width: 200px; display: none;">
             </div>
         </div>
 
