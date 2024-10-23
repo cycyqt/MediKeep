@@ -11,6 +11,10 @@ use App\Models\Order;
 use App\Models\Order_item;
 use App\Models\Supplier;
 
+use Illuminate\Support\Facades\Mail;
+
+use App\Mail\OrderConfirmationMail;
+
 class Staff_dashboard extends Controller
 {
     public function home ()
@@ -142,7 +146,6 @@ class Staff_dashboard extends Controller
 
     public function add_order(Request $request)
     {
-       
         $validatedData = $request->validate([
             'supplier_id' => 'required|exists:suppliers,id',
             'staff_id' => 'required|string',
@@ -153,20 +156,15 @@ class Staff_dashboard extends Controller
             'unit_price' => 'required|array',
             'total_price' => 'required|array',
         ]);
-    
-      
-    
+
         $order = new Order;
         $order->supplier_id = $validatedData['supplier_id'];
         $order->staff_id = $validatedData['staff_id'];
         $order->order_date = $validatedData['order_date'];
         $order->status = $validatedData['status'];
         $order->total_amount = array_sum($validatedData['total_price']); // Calculate total amount
-    
-  
         $orderSaved = $order->save();
-        
- 
+
         if (!$orderSaved) {
             return redirect()->back()->with('error', "Failed to save the order.");
         }
@@ -178,11 +176,15 @@ class Staff_dashboard extends Controller
             $orderItem->quantity = $validatedData['quantity'][$index];
             $orderItem->unit_price = $validatedData['unit_price'][$index];
             $orderItem->total_amount = $validatedData['total_price'][$index];
-    
             $orderItem->save();
         }
-    
-        return redirect()->back()->with('success', "Order successfully submitted.");
+
+        $products = Product::whereIn('id', $request->product_id)->get(['id', 'name']);
+        $supplier = Supplier::find($validatedData['supplier_id']);
+        $supplierEmail = $supplier->contact_info;
+        Mail::to($supplierEmail)->send(new OrderConfirmationMail($order, $products, $supplier, $validatedData));
+
+        return redirect()->back()->with('success', "Order successfully submitted and emailed to the supplier.");
     }
 
     public function orderlist ()

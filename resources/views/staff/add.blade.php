@@ -282,7 +282,7 @@
 
                                         <div class="col-md-6 mb-3">
                                             <div class="input-group">
-                                                <span class="input-group-text bg-gray-200 p-2">Measurement</span>
+                                                <span class="input-group-text bg-gray-200 p-2">Dosage</span>
                                                 <input type="text" class="form-control" name="measurement" required>
                                             </div>
                                         </div>
