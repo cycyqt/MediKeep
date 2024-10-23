@@ -15,23 +15,26 @@ class OrderConfirmationMail extends Mailable
     public $supplier;
     public $validatedData;
 
-    public function __construct($order, $products, $supplier, $validatedData)
+    public function __construct($order, $products, $supplier, $validatedData, $subject)
     {
         $this->order = $order;
         $this->products = $products;
         $this->supplier = $supplier;
         $this->validatedData = $validatedData;
+        $this->subject = $subject;
     }
 
     public function build()
     {
-        return $this->view('emails.order_confirmation')
-                    ->with([
-                        'order' => $this->order,
-                        'products' => $this->products,
-                        'supplier' => $this->supplier,
-                        'validatedData' => $this->validatedData,
-                    ])
-                    ->subject('New Order Confirmation');
+        return $this
+            ->subject($this->subject)
+            ->view('emails.order_confirmation')
+            ->with([
+                'order' => $this->order,
+                'products' => $this->products,
+                'supplier' => $this->supplier,
+                'validatedData' => $this->validatedData,
+            ]);
     }
+
 }

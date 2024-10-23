@@ -128,7 +128,7 @@ class Staff_dashboard extends Controller
     {
         $deleteRecord =  Product::find($id);
         $deleteRecord->delete();
-        return redirect()->back()->with('success', "Medicine CAtegory Successfully Deleted");
+        return redirect()->back()->with('success', "Medicine Category Successfully Deleted");
     }
 
     public function list ()
@@ -182,7 +182,7 @@ class Staff_dashboard extends Controller
         $products = Product::whereIn('id', $request->product_id)->get(['id', 'name']);
         $supplier = Supplier::find($validatedData['supplier_id']);
         $supplierEmail = $supplier->contact_info;
-        Mail::to($supplierEmail)->send(new OrderConfirmationMail($order, $products, $supplier, $validatedData));
+        Mail::to($supplierEmail)->send(new OrderConfirmationMail($order, $products, $supplier, $validatedData, "New Order Confirmation - Order ID: {$order->id}"));
 
         return redirect()->back()->with('success', "Order successfully submitted and emailed to the supplier.");
     }

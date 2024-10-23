@@ -88,13 +88,24 @@
                 </thead>
                 <tbody>
                     @foreach ($validatedData['product_id'] as $index => $productId)
+                        @php
+                            $product = $products->where('id', $productId)->first();
+                        @endphp
                         <tr>
-                            <td>{{ $products[$index]->name }}</td>
+                            <td>{{ $product ? $product->name : 'Unknown Product' }}</td>
                             <td>{{ $validatedData['quantity'][$index] }}</td>
                             <td>₱ {{ number_format($validatedData['unit_price'][$index], 2) }}</td>
                             <td>₱ {{ number_format($validatedData['total_price'][$index], 2) }}</td>
                         </tr>
                     @endforeach
+                    <tfoot>
+                        <tr>
+                            <td><strong>Total</strong></td>
+                            <td><strong>{{ array_sum($validatedData['quantity']) }}</strong></td>
+                            <td></td>
+                            <td><strong>₱ {{ number_format(array_sum($validatedData['total_price']), 2) }}</strong></td>
+                        </tr>
+                    </tfoot>                    
                 </tbody>
             </table>
         </div>
