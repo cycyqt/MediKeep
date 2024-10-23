@@ -1,50 +1,106 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Confirmation</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .header {
+            background-color: #007BFF;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+        }
+        .header img {
+            max-width: 150px;
+            height: auto;
+            float: right;
+        }
+        .content {
+            padding: 20px;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        h2 {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        p {
+            line-height: 1.6;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 10px;
         }
         th, td {
             border: 1px solid #dddddd;
             text-align: left;
-            padding: 8px;
+            padding: 10px;
         }
         th {
             background-color: #f2f2f2;
         }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f2f2f2;
+            font-size: 12px;
+            color: #666;
+        }
     </style>
 </head>
 <body>
-    <img src="https://i.ibb.co/gt0zTSh/Logo-2.png" alt="Logo" style="float: right; max-width: 150px; height: auto;">
+    <div class="container">
+        <div class="header">
+            <img src="https://i.ibb.co/gt0zTSh/Logo-2.png" alt="Logo">
+            <h1>Order Request</h1>
+        </div>
+        <div class="content">
+            <p>Dear <strong>{{ $supplier->name }}</strong>,</p>
+            <p>A new order has been placed by <strong>{{ $order->staff_id }}</strong> for <strong>{{ $order->order_date }}.</strong></p>
 
-    <h1>Order Confirmation</h1>
-    <p>Dear {{ $supplier->name }},</p>
-    <p>A new order has been placed by {{ $order->staff_id }} on {{ $order->order_date }}.</p>
-
-    <h2>Order Details:</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Product</th>
-                <th>Quantity</th>
-                <th>Unit Price</th>
-                <th>Total Price</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($validatedData['product_id'] as $index => $productId)
-                <tr>
-                    <td>{{ $products[$index]->name }}</td>
-                    <td>{{ $validatedData['quantity'][$index] }}</td>
-                    <td>{{ number_format($validatedData['unit_price'][$index], 2) }}</td>
-                    <td>{{ number_format($validatedData['total_price'][$index], 2) }}</td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+            <h2>Order Details:</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Total Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($validatedData['product_id'] as $index => $productId)
+                        <tr>
+                            <td>{{ $products[$index]->name }}</td>
+                            <td>{{ $validatedData['quantity'][$index] }}</td>
+                            <td>₱ {{ number_format($validatedData['unit_price'][$index], 2) }}</td>
+                            <td>₱ {{ number_format($validatedData['total_price'][$index], 2) }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        <div class="footer">
+            <p>Thank you for your business!</p>
+        </div>
+    </div>
 </body>
 </html>
