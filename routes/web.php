@@ -73,6 +73,8 @@ Route::middleware(['auth', 'loguseractivity', 'verified', 'autologout'])->group(
             Route::get('supplier', 'supplier')->name('staff.supplier');
             Route::post('add_supplier', 'add_supplier')->name('staff.add_supplier');
         });
+        Route::post('/submit-order', [Staff_dashboard::class, 'submitOrder']);
+
     });
 
     // Admin dashboard routes

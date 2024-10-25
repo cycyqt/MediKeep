@@ -256,14 +256,68 @@ class Staff_dashboard extends Controller
         $orders = Order::findOrFail($id);
         $orders->delete();
 
-        return redirect()->route('order.orderlist')->with('success', 'User archived successfully.');
+        return redirect()->route('order.orderlist')->with('success', 'Order deleted successfully.');
     }
 
+    public function showOrderSummary(Request $request)
+    {
+        $validatedData = $request->validate([
+            'product_id' => 'required|array',
+            'quantity' => 'required|array',
+            'unit_price' => 'required|array',
+            'total_price' => 'required|array',
+            'supplier_id' => 'required|exists:suppliers,id',
+        ]);
 
+        $supplier = Supplier::find($validatedData['supplier_id']);
+        $products = Product::whereIn('id', $validatedData['product_id'])->get();
 
+        return view('order.order', compact('validatedData', 'supplier', 'products'));
+    }
     
-    
-    
+    public function submitOrder(Request $request)
+    {
+        $validatedData = $request->validate([
+            'supplier_id' => 'required|exists:suppliers,id',
+            'staff_id' => 'required|string',
+            'order_date' => 'required|date',
+            'status' => 'required|string',
+            'product_id' => 'required|array',
+            'quantity' => 'required|array',
+            'unit_price' => 'required|array',
+            'total_price' => 'required|array',
+        ]);
+
+        $order = new Order;
+        $order->supplier_id = $validatedData['supplier_id'];
+        $order->staff_id = $validatedData['staff_id'];
+        $order->order_date = $validatedData['order_date'];
+        $order->status = $validatedData['status'];
+        $order->total_amount = array_sum($validatedData['total_price']); // Calculate total amount
+        $orderSaved = $order->save();
+
+        if (!$orderSaved) {
+            return redirect()->back()->with('error', "Failed to save the order.");
+        }
+
+        foreach ($validatedData['product_id'] as $index => $productId) {
+            $orderItem = new Order_item;
+            $orderItem->order_id = $order->id;
+            $orderItem->product_id = $productId;
+            $orderItem->quantity = $validatedData['quantity'][$index];
+            $orderItem->unit_price = $validatedData['unit_price'][$index];
+            $orderItem->total_amount = $validatedData['total_price'][$index];
+            $orderItem->save();
+        }
+
+        $products = Product::whereIn('id', $request->product_id)->get(['id', 'name']);
+        $supplier = Supplier::find($validatedData['supplier_id']);
+        $supplierEmail = $supplier->contact_info;
+        Mail::to($supplierEmail)->send(new OrderConfirmationMail($order, $products, $supplier, $validatedData, "New Order Confirmation - Order ID: {$order->id}"));
+
+        return response()->json(['success' => true, 'message' => 'Order submitted successfully!']);
+    }
+
 
     public function supplier ()
     {

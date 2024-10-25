@@ -74,7 +74,7 @@
         </div>
         <div class="content">
             <p>Dear <strong>{{ $supplier->name }}</strong>,</p>
-            <p>A new order has been placed by <strong>{{ $order->staff_id }}</strong> for <strong>{{ $order->order_date }}.</strong></p>
+            <p>A new order has been placed by <strong>{{ Auth::user()->name }}</strong> for <strong>{{ $order->order_date }}.</strong></p>
 
             <h2>Order Details:</h2>
             <table>

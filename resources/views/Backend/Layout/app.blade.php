@@ -20,4 +20,5 @@
         </main>
         @include('Backend.Layout.common-end')
         @stack('custom-scripts')
+        @stack('custom-css')
 </html>

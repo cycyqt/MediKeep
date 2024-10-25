@@ -47,7 +47,7 @@
                           </a>
                           
                           
-                          <button type="button" class="btn btn-danger" onclick="confirmAction({{ $order->id }}, 'Are you sure you want to archive this order?')">
+                          <button type="button" class="btn btn-danger" onclick="confirmAction({{ $order->id }}, 'Are you sure you want to delete this order?')">
                               <i class="fas fa-archive"></i>
                           </button>
 
@@ -63,7 +63,7 @@
 
                 @else
                 <tr>
-                  <td class="text-center" colspan="6">No users found</td>
+                  <td class="text-center" colspan="6">No orders found</td>
                 </tr>
               @endif
               
