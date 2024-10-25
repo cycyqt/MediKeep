@@ -52,6 +52,17 @@
         border-color: #0056b3;
     }
 
+    .btn-info {
+        background-color: #007bff; /* Same blue as .btn-primary */
+        border-color: #007bff;
+        color: white;
+    }
+
+    .btn-info:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+
     .form-control:focus {
         outline: none;
         border-color: #007bff;
@@ -81,9 +92,51 @@
     .nav-tabs .nav-item .nav-link {
         padding-right: 25px;
     }
+
+    /* Modal Styles */
+    .modal-header {
+        display: flex;
+        align-items: center;
+        background-color: #007bff; /* Your preferred color */
+        color: white;
+    }
+
+    .modal-logo {
+        width: 50px; /* Adjust logo size */
+        height: auto;
+        margin-right: 15px; /* Space between logo and title */
+    }
+
+    .modal-title {
+        font-weight: bold;
+        color: white;
+    }
+
+    .modal-body {
+        padding: 20px;
+        font-family: Arial, sans-serif; /* Or any professional font */
+    }
+
+    .modal-body h5 {
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+
+    .modal-body ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .modal-body li {
+        margin-bottom: 5px;
+    }
+
+    .modal-footer {
+        display: flex;
+        justify-content: space-between;
+    }
+
 </style>
-
-
 
 <div class="container-fluid py-4">
     <div class="card-body">
@@ -140,13 +193,17 @@
                                         <input type="text" class="form-control" value="Pending" readonly placeholder="Status">
                                         <input type="hidden" name="status" value="Pending">
                                     </div>
+
+                                    <div class="col-12 text-center">
+                                        <button type="submit" class="btn btn-primary" onclick="return validateOrderItems()">Submit Order</button>
+                                    </div>
                                 </div>
 
                                 <!-- Right Column: Order Items with Tabs -->
                                 <div class="col-md-6">
-                                    <div class="card-header mb-2 p-2">
+                                    <div class="card-header mb-2 p-2" style="visibility: hidden;">
                                         <h3 class="card-title">Order Items</h3>
-                                    </div>
+                                    </div>                                    
 
                                     <!-- Tabs for Order Items -->
                                     <ul class="nav nav-tabs" id="orderItemsTabs" role="tablist">
@@ -185,15 +242,16 @@
                                     <!-- Button to Add More Items -->
                                     <div class="text-center">
                                         <button type="button" class="btn btn-secondary" id="addMoreItemsBtn" onclick="addOrderItem()" disabled>Add More Items</button>
+                                        <button type="button" class="btn btn-info" id="orderSummaryBtn" onclick="showOrderSummary()">Order Summary</button>
                                     </div>
                                 </div>
 
                                 <!-- Submit Button -->
-                                <div class="row">
+                                {{-- <div class="row">
                                     <div class="col-12 text-center mt-2">
                                         <button type="submit" class="btn btn-primary mt-4" onclick="return validateOrderItems()">Submit Order</button>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
                         </form>
                         <!-- Order Form Ends Here -->
@@ -203,6 +261,61 @@
             </div>
         </div>
     </div>
+    <!-- Order Summary Modal -->
+    <div class="modal fade" id="orderSummaryModal" tabindex="-1" role="dialog" aria-labelledby="orderSummaryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content" style="width: 800px; height: 600px; overflow: hidden; position: relative;">
+                
+                <img src="https://i.ibb.co/zSNR7Bf/Picsart-24-10-25-20-14-54-279.png" alt="Logo" 
+                    style="position: absolute; top: 10px; right: 10px; height: 100px; opacity: 1; transform: rotate(-15deg); z-index: 1;">
+
+                <div class="modal-header d-flex justify-content-center align-items-center" 
+                    style="background-color: #007bff; color: white; padding: 0.5rem 1rem;">
+                    <h5 class="modal-title mx-auto" id="orderSummaryModalLabel" style="margin: 0; font-weight: bold; z-index: 2;">ORDER SUMMARY</h5>
+                </div>
+                
+                <div class="modal-body d-flex flex-column px-5" id="orderSummaryContent" style="height: calc(100% - 4rem);">
+                    <div class="mb-3">
+                        <p>A new order will be placed by <strong>{{ Auth::user()->name }}</strong>
+                        to: </p><p><strong id="supplierName"></strong></p> 
+                    </div>
+                    
+                    <div class="table-responsive flex-grow-1" style="max-height: 300px; overflow-y: auto;">
+                        <table class="table table-hover table-bordered table-striped mb-0">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th class="text-center">Item</th>
+                                    <th class="text-center">Quantity</th>
+                                    <th class="text-center">Unit Price</th>
+                                    <th class="text-center">Total Price</th>
+                                </tr>
+                            </thead>
+                            <tbody id="orderItemsTableBody">
+                                <!-- dynamically populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Footer with Total Amount pinned at the bottom -->
+                <div class="modal-footer p-0">
+                    <table class="table mb-0">
+                        <tfoot>
+                            <tr>
+                                <th colspan="4" class="text-center bg-light">
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <span class="text-right mr-2">Total Amount:<span class="opacity-0">--</span></span>
+                                        <span id="totalAmount" class="ml-2">₱0.00</span>
+                                    </div>
+                                </th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>                
+            </div>
+        </div>
+    </div>
+
     <!-- footer -->
     @include('components.footer')
 </div>
@@ -265,70 +378,70 @@
         }
     }
 
-document.getElementById('orderItemsTabContent').addEventListener('change', function(event) {
-    if (event.target.classList.contains('product-select')) {
-        updateTabName(event.target);
+    document.getElementById('orderItemsTabContent').addEventListener('change', function(event) {
+        if (event.target.classList.contains('product-select')) {
+            updateTabName(event.target);
+        }
+    });
+
+    function addOrderItem() {
+        itemCount++;
+
+        var newItemTab = `
+            <li class="nav-item">
+                <a class="nav-link" id="item${itemCount}-tab" data-toggle="tab" href="#item${itemCount}" role="tab" aria-controls="item${itemCount}" aria-selected="false">
+                    New Item
+                    <button type="button" class="close-btn" onclick="removeTab(${itemCount})">&times;</button>
+                </a>
+            </li>
+        `;
+
+        var newItemContent = `
+            <div class="tab-pane fade order-items" id="item${itemCount}" role="tabpanel" aria-labelledby="item${itemCount}-tab">
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <select class="form-control product-select" name="product_id[]" required onchange="updatePrice(this)">
+                        <option value="" disabled selected hidden style="color: lightgray;">Select Product</option>
+                        @foreach($products as $product)
+                            <option value="{{ $product->id }}" data-price="{{ $product->price }}">
+                                {{ $product->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <input type="number" class="form-control quantity" id="quantity${itemCount}" name="quantity[]" oninput="calculateTotalPrice(${itemCount}); checkQuantity()" required min="1" placeholder="Quantity">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <input type="number" step="0.01" class="form-control unit-price" id="unitPrice${itemCount}" name="unit_price[]" oninput="calculateTotalPrice(${itemCount})" required readonly placeholder="Unit Price">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <input type="number" step="0.01" class="form-control total-price" id="totalPrice${itemCount}" name="total_price[]" readonly placeholder="Total Price">
+                </div>
+            </div>
+        `;
+
+        document.getElementById('orderItemsTabs').insertAdjacentHTML('beforeend', newItemTab);
+        document.getElementById('orderItemsTabContent').insertAdjacentHTML('beforeend', newItemContent);
+
+        $('#orderItemsTabs .nav-link').removeClass('active');
+        $('.tab-pane').removeClass('show active');
+
+        $(`#item${itemCount}-tab`).addClass('active');
+        $(`#item${itemCount}`).addClass('show active');
+
+        checkQuantity();
     }
-});
 
-function addOrderItem() {
-    itemCount++;
+    function updateTabName(selectElement) {
+        var selectedOption = selectElement.options[selectElement.selectedIndex];
+        var productName = selectedOption.text;
+        var tabId = selectElement.closest('.tab-pane').id;
 
-    var newItemTab = `
-        <li class="nav-item">
-            <a class="nav-link" id="item${itemCount}-tab" data-toggle="tab" href="#item${itemCount}" role="tab" aria-controls="item${itemCount}" aria-selected="false">
-                New Item
-                <button type="button" class="close-btn" onclick="removeTab(${itemCount})">&times;</button>
-            </a>
-        </li>
-    `;
-
-    var newItemContent = `
-        <div class="tab-pane fade order-items" id="item${itemCount}" role="tabpanel" aria-labelledby="item${itemCount}-tab">
-            <div class="form-group" style="margin-bottom: 15px;">
-                <select class="form-control product-select" name="product_id[]" required onchange="updatePrice(this)">
-                    <option value="" disabled selected hidden style="color: lightgray;">Select Product</option>
-                    @foreach($products as $product)
-                        <option value="{{ $product->id }}" data-price="{{ $product->price }}">
-                            {{ $product->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="form-group" style="margin-bottom: 15px;">
-                <input type="number" class="form-control quantity" id="quantity${itemCount}" name="quantity[]" oninput="calculateTotalPrice(${itemCount}); checkQuantity()" required min="1" placeholder="Quantity">
-            </div>
-            <div class="form-group" style="margin-bottom: 15px;">
-                <input type="number" step="0.01" class="form-control unit-price" id="unitPrice${itemCount}" name="unit_price[]" oninput="calculateTotalPrice(${itemCount})" required readonly placeholder="Unit Price">
-            </div>
-            <div class="form-group" style="margin-bottom: 15px;">
-                <input type="number" step="0.01" class="form-control total-price" id="totalPrice${itemCount}" name="total_price[]" readonly placeholder="Total Price">
-            </div>
-        </div>
-    `;
-
-    document.getElementById('orderItemsTabs').insertAdjacentHTML('beforeend', newItemTab);
-    document.getElementById('orderItemsTabContent').insertAdjacentHTML('beforeend', newItemContent);
-
-    $('#orderItemsTabs .nav-link').removeClass('active');
-    $('.tab-pane').removeClass('show active');
-
-    $(`#item${itemCount}-tab`).addClass('active');
-    $(`#item${itemCount}`).addClass('show active');
-
-    checkQuantity();
-}
-
-function updateTabName(selectElement) {
-    var selectedOption = selectElement.options[selectElement.selectedIndex];
-    var productName = selectedOption.text;
-    var tabId = selectElement.closest('.tab-pane').id;
-
-    document.querySelector(`a[href='#${tabId}']`).innerHTML = `
-        ${productName}
-        <button type="button" class="close-btn" onclick="removeTab(${itemCount})">&times;</button>
-    `;
-}
+        document.querySelector(`a[href='#${tabId}']`).innerHTML = `
+            ${productName}
+            <button type="button" class="close-btn" onclick="removeTab(${itemCount})">&times;</button>
+        `;
+    }
 
     function removeTab(index) {
         
@@ -355,6 +468,65 @@ function updateTabName(selectElement) {
         }
     }
 
+    function showOrderSummary() {
+        // Check if all required fields are filled
+        if (!validateRequiredFields()) {
+            alert("Please fill in all required fields before viewing the order summary.");
+            return;
+        }
+
+        // Populate the modal with order details
+        const supplierName = document.getElementById('supplierSelect').selectedOptions[0].text;
+        document.getElementById('supplierName').innerText = supplierName;
+
+        const orderItemsTableBody = document.getElementById('orderItemsTableBody');
+        orderItemsTableBody.innerHTML = ''; // Clear existing rows
+
+        let totalAmount = 0;
+
+        // Loop through each order item and populate the table
+        for (let i = 1; i <= itemCount; i++) {
+            const productSelect = document.querySelector(`#item${i} .product-select`);
+            const quantityInput = document.querySelector(`#quantity${i}`);
+            const unitPriceInput = document.querySelector(`#unitPrice${i}`);
+            const totalPriceInput = document.querySelector(`#totalPrice${i}`);
+
+            if (productSelect && quantityInput && unitPriceInput && totalPriceInput) {
+                const itemName = productSelect.options[productSelect.selectedIndex].text;
+                const quantity = quantityInput.value;
+                const unitPrice = unitPriceInput.value;
+                const totalPrice = totalPriceInput.value;
+
+                const row = `<tr>
+                    <td class="text-center">${itemName}</td>
+                    <td class="text-center">${quantity}</td>
+                    <td class="text-center">₱${parseFloat(unitPrice).toFixed(2)}</td>
+                    <td class="text-center">₱${parseFloat(totalPrice).toFixed(2)}</td>
+                </tr>`;
+                orderItemsTableBody.innerHTML += row;
+
+                totalAmount += parseFloat(totalPrice);
+            }
+        }
+
+        document.getElementById('totalAmount').innerText = `₱${totalAmount.toFixed(2)}`;
+        $('#orderSummaryModal').modal('show'); // Show the modal
+    }
+
+    function validateRequiredFields() {
+        // Check supplier
+        const supplierSelect = document.getElementById('supplierSelect');
+        if (!supplierSelect.value) return false;
+
+        // Check each order item
+        for (let i = 1; i <= itemCount; i++) {
+            const productSelect = document.querySelector(`#item${i} .product-select`);
+            const quantityInput = document.querySelector(`#quantity${i}`);
+            if (!productSelect.value || !quantityInput.value) return false;
+        }
+
+        return true;
+    }
 
 </script>
 
