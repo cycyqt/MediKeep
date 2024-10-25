@@ -53,7 +53,7 @@
     }
 
     .btn-info {
-        background-color: #007bff; /* Same blue as .btn-primary */
+        background-color: #007bff;
         border-color: #007bff;
         color: white;
     }
@@ -93,18 +93,17 @@
         padding-right: 25px;
     }
 
-    /* Modal Styles */
     .modal-header {
         display: flex;
         align-items: center;
-        background-color: #007bff; /* Your preferred color */
+        background-color: #007bff;
         color: white;
     }
 
     .modal-logo {
-        width: 50px; /* Adjust logo size */
+        width: 50px;
         height: auto;
-        margin-right: 15px; /* Space between logo and title */
+        margin-right: 15px;
     }
 
     .modal-title {
@@ -114,7 +113,7 @@
 
     .modal-body {
         padding: 20px;
-        font-family: Arial, sans-serif; /* Or any professional font */
+        font-family: Arial, sans-serif;
     }
 
     .modal-body h5 {
@@ -239,7 +238,7 @@
                                         </div>
                                     </div>
 
-                                    <!-- Button to Add More Items -->
+                                    <!-- Buttons -->
                                     <div class="text-center">
                                         <button type="button" class="btn btn-secondary" id="addMoreItemsBtn" onclick="addOrderItem()" disabled>Add More Items</button>
                                         <button type="button" class="btn btn-info" id="orderSummaryBtn" onclick="showOrderSummary()">Order Summary</button>
@@ -291,13 +290,11 @@
                                 </tr>
                             </thead>
                             <tbody id="orderItemsTableBody">
-                                <!-- dynamically populated -->
+                                <!-- wilL be populated -->
                             </tbody>
                         </table>
                     </div>
                 </div>
-                
-                <!-- Footer with Total Amount pinned at the bottom -->
                 <div class="modal-footer p-0">
                     <table class="table mb-0">
                         <tfoot>
@@ -315,11 +312,8 @@
             </div>
         </div>
     </div>
-
-    <!-- footer -->
     @include('components.footer')
 </div>
-<!-- end -->
 
 @endsection
 
@@ -466,25 +460,36 @@
                 $(firstTabId).addClass('show active');
             }
         }
+
+        for (let i = tabIndex; i <= itemCount; i++) {
+            const tab = document.querySelector(`#item${i}`);
+            if (tab) {
+                tab.id = `item${i - 1}`;
+                // Update select and input IDs accordingly
+                const productSelect = tab.querySelector('.product-select');
+                const quantityInput = tab.querySelector(`#quantity${i}`);
+                const unitPriceInput = tab.querySelector(`#unitPrice${i}`);
+                const totalPriceInput = tab.querySelector(`#totalPrice${i}`);
+
+                productSelect.id = `productSelect${i - 1}`;
+                quantityInput.id = `quantity${i - 1}`;
+                unitPriceInput.id = `unitPrice${i - 1}`;
+                totalPriceInput.id = `totalPrice${i - 1}`;
+            }
+        }
     }
 
-    function showOrderSummary() {
-        // Check if all required fields are filled
-        if (!validateRequiredFields()) {
-            alert("Please fill in all required fields before viewing the order summary.");
-            return;
-        }
 
-        // Populate the modal with order details
+    function showOrderSummary() {
+
         const supplierName = document.getElementById('supplierSelect').selectedOptions[0].text;
         document.getElementById('supplierName').innerText = supplierName;
 
         const orderItemsTableBody = document.getElementById('orderItemsTableBody');
-        orderItemsTableBody.innerHTML = ''; // Clear existing rows
+        orderItemsTableBody.innerHTML = '';
 
         let totalAmount = 0;
 
-        // Loop through each order item and populate the table
         for (let i = 1; i <= itemCount; i++) {
             const productSelect = document.querySelector(`#item${i} .product-select`);
             const quantityInput = document.querySelector(`#quantity${i}`);
@@ -492,42 +497,27 @@
             const totalPriceInput = document.querySelector(`#totalPrice${i}`);
 
             if (productSelect && quantityInput && unitPriceInput && totalPriceInput) {
-                const itemName = productSelect.options[productSelect.selectedIndex].text;
-                const quantity = quantityInput.value;
-                const unitPrice = unitPriceInput.value;
-                const totalPrice = totalPriceInput.value;
+                if (productSelect.value && quantityInput.value) {
+                    const itemName = productSelect.options[productSelect.selectedIndex].text;
+                    const quantity = quantityInput.value;
+                    const unitPrice = unitPriceInput.value;
+                    const totalPrice = totalPriceInput.value;
 
-                const row = `<tr>
-                    <td class="text-center">${itemName}</td>
-                    <td class="text-center">${quantity}</td>
-                    <td class="text-center">₱${parseFloat(unitPrice).toFixed(2)}</td>
-                    <td class="text-center">₱${parseFloat(totalPrice).toFixed(2)}</td>
-                </tr>`;
-                orderItemsTableBody.innerHTML += row;
+                    const row = `<tr>
+                        <td class="text-center">${itemName}</td>
+                        <td class="text-center">${quantity}</td>
+                        <td class="text-center">₱${parseFloat(unitPrice).toFixed(2)}</td>
+                        <td class="text-center">₱${parseFloat(totalPrice).toFixed(2)}</td>
+                    </tr>`;
+                    orderItemsTableBody.innerHTML += row;
 
-                totalAmount += parseFloat(totalPrice);
+                    totalAmount += parseFloat(totalPrice);
+                }
             }
         }
-
         document.getElementById('totalAmount').innerText = `₱${totalAmount.toFixed(2)}`;
-        $('#orderSummaryModal').modal('show'); // Show the modal
-    }
-
-    function validateRequiredFields() {
-        // Check supplier
-        const supplierSelect = document.getElementById('supplierSelect');
-        if (!supplierSelect.value) return false;
-
-        // Check each order item
-        for (let i = 1; i <= itemCount; i++) {
-            const productSelect = document.querySelector(`#item${i} .product-select`);
-            const quantityInput = document.querySelector(`#quantity${i}`);
-            if (!productSelect.value || !quantityInput.value) return false;
-        }
-
-        return true;
+        $('#orderSummaryModal').modal('show');
     }
 
 </script>
-
 @endpush
