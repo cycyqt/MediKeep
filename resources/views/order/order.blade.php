@@ -9,6 +9,27 @@
 </head>
 
 <style>
+
+    .no-highlight {
+        user-select: none; /* Prevent text selection */
+        -webkit-user-select: none; /* Safari */
+        -moz-user-select: none; /* Firefox */
+    }
+
+    .no-interaction {
+        pointer-events: none; /* Disable all mouse events */
+        user-select: none; /* Disable text selection */
+        caret-color: transparent; /* Hide the text cursor */
+        background-color: transparent; /* Optional: set background to transparent */
+        color: inherit; /* Optional: inherit text color from parent */
+    }
+
+    .caret-block {
+        caret-color: transparent;
+        background-color: transparent;
+        color: inherit;
+    }
+
     .nav-tabs {
         border-bottom: 2px solid #e0e0e0;
     }
@@ -137,7 +158,7 @@
 
 </style>
 
-<div class="container-fluid py-4">
+<div class="container-fluid py-4 caret-block no-highlight">
     <div class="card-body">
         <div class="row mt-3">
             <div class="col-lg-12 mb-lg-0 mb-4 mx-auto">
@@ -163,7 +184,7 @@
                                 <!-- Left Column: Order Information -->
                                 <div class="col-md-6">
                                     <div class="card-header mb-2 p-2">
-                                        <h3 class="card-title">Order Form</h3>
+                                        <h3 class="card-title no-interaction">Order Form</h3>
                                     </div>
 
                                     <div class="form-group" style="margin-bottom: 15px; margin-top: 51px;">
@@ -179,20 +200,20 @@
                                         </select>
                                     </div>
 
-                                    <div class="form-group" style="margin-bottom: 15px;">
+                                    <div class="form-group no-interaction" style="margin-bottom: 15px;">
                                         <input type="hidden" name="staff_id" value="{{ Auth::id() }}">
                                         <input type="text" class="form-control" value="{{ Auth::user()->name }}" readonly placeholder="Staff">
                                     </div>
 
                                     <div class="form-group" style="margin-bottom: 15px;">
-                                        <input type="date" class="form-control" id="orderDate" name="order_date" required placeholder="Order Date">
+                                        <input type="date" class="form-control" id="orderDate" name="order_date">
                                     </div>
 
-                                    <div class="form-group" style="margin-bottom: 15px;">
+                                    <div class="form-group no-interaction" style="margin-bottom: 15px;">
                                         <input type="text" class="form-control" value="Pending" readonly placeholder="Status">
                                         <input type="hidden" name="status" value="Pending">
                                     </div>
-
+                                    
                                     <div class="col-12 text-center">
                                         <button type="submit" class="btn btn-primary" onclick="return validateOrderItems()">Submit Order</button>
                                     </div>
@@ -226,13 +247,13 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div class="form-group" style="margin-bottom: 15px;">
+                                            <div class="form-group" style="margin-bottom: 15px; caret-color: auto; background-color: auto; color: auto;">
                                                 <input type="number" class="form-control quantity" id="quantity1" name="quantity[]" oninput="calculateTotalPrice(1); checkQuantity()" required min="1" placeholder="Quantity">
                                             </div>
-                                            <div class="form-group" style="margin-bottom: 15px;">
+                                            <div class="form-group no-interaction" style="margin-bottom: 15px;">
                                                 <input type="number" step="0.01" class="form-control unit-price" id="unitPrice1" name="unit_price[]" oninput="calculateTotalPrice(1)" required readonly placeholder="Unit Price">
                                             </div>
-                                            <div class="form-group" style="margin-bottom: 15px;">
+                                            <div class="form-group no-interaction" style="margin-bottom: 15px;">
                                                 <input type="number" step="0.01" class="form-control total-price" id="totalPrice1" name="total_price[]" readonly placeholder="Total Price">
                                             </div>
                                         </div>
@@ -244,13 +265,6 @@
                                         <button type="button" class="btn btn-info" id="orderSummaryBtn" onclick="showOrderSummary()">Order Summary</button>
                                     </div>
                                 </div>
-
-                                <!-- Submit Button -->
-                                {{-- <div class="row">
-                                    <div class="col-12 text-center mt-2">
-                                        <button type="submit" class="btn btn-primary mt-4" onclick="return validateOrderItems()">Submit Order</button>
-                                    </div>
-                                </div> --}}
                             </div>
                         </form>
                         <!-- Order Form Ends Here -->
@@ -273,15 +287,15 @@
                     <h5 class="modal-title mx-auto" id="orderSummaryModalLabel" style="margin: 0; font-weight: bold; z-index: 2;">ORDER SUMMARY</h5>
                 </div>
                 
-                <div class="modal-body d-flex flex-column px-5" id="orderSummaryContent" style="height: calc(100% - 4rem);">
-                    <div class="mb-3">
+                <div class="modal-body d-flex flex-column px-5 no-interaction" id="orderSummaryContent" style="height: calc(100% - 4rem);">
+                    <div class="mb-3 no-interaction">
                         <p>A new order will be placed by <strong>{{ Auth::user()->name }}</strong>
                         to: </p><p><strong id="supplierName"></strong></p> 
                     </div>
                     
-                    <div class="table-responsive flex-grow-1" style="max-height: 300px; overflow-y: auto;">
+                    <div class="table-responsive flex-grow-1 no-interaction" style="max-height: 300px; overflow-y: auto;">
                         <table class="table table-hover table-bordered table-striped mb-0">
-                            <thead class="thead-dark">
+                            <thead class="thead-dark no-interaction">
                                 <tr>
                                     <th class="text-center">Item</th>
                                     <th class="text-center">Quantity</th>
@@ -295,11 +309,11 @@
                         </table>
                     </div>
                 </div>
-                <div class="modal-footer p-0">
-                    <table class="table mb-0">
+                <div class="modal-footer p-0 no-interaction">
+                    <table class="table mb-0 no-interaction">
                         <tfoot>
                             <tr>
-                                <th colspan="4" class="text-center bg-light">
+                                <th colspan="4" class="text-center bg-light no-interaction">
                                     <div class="d-flex justify-content-center align-items-center">
                                         <span class="text-right mr-2">Total Amount:<span class="opacity-0">--</span></span>
                                         <span id="totalAmount" class="ml-2">₱0.00</span>
@@ -402,13 +416,13 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="form-group" style="margin-bottom: 15px;">
+                <div class="form-group" style="margin-bottom: 15px; caret-color: auto; background-color: auto; color: auto;">
                     <input type="number" class="form-control quantity" id="quantity${itemCount}" name="quantity[]" oninput="calculateTotalPrice(${itemCount}); checkQuantity()" required min="1" placeholder="Quantity">
                 </div>
-                <div class="form-group" style="margin-bottom: 15px;">
+                <div class="form-group no-interaction" style="margin-bottom: 15px;">
                     <input type="number" step="0.01" class="form-control unit-price" id="unitPrice${itemCount}" name="unit_price[]" oninput="calculateTotalPrice(${itemCount})" required readonly placeholder="Unit Price">
                 </div>
-                <div class="form-group" style="margin-bottom: 15px;">
+                <div class="form-group no-interaction" style="margin-bottom: 15px;">
                     <input type="number" step="0.01" class="form-control total-price" id="totalPrice${itemCount}" name="total_price[]" readonly placeholder="Total Price">
                 </div>
             </div>
