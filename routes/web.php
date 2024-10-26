@@ -49,7 +49,7 @@ Route::middleware(['auth', 'loguseractivity', 'verified', 'autologout'])->group(
     });
 
     // Staff dashboard routes
-    Route::middleware(['user-role:staff'])->group(function () {
+    Route::middleware(['user-role:staff'])->group(function () { 
         Route::prefix('staff')->controller(Staff_dashboard::class)->group(function () {
             Route::get('home', 'home')->name('staff.home');
             Route::get('add', 'add')->name('staff.add');
@@ -72,8 +72,8 @@ Route::middleware(['auth', 'loguseractivity', 'verified', 'autologout'])->group(
             Route::delete('order/{id}', 'orderdelete')->name('order.orderdelete');
             Route::get('supplier', 'supplier')->name('staff.supplier');
             Route::post('add_supplier', 'add_supplier')->name('staff.add_supplier');
+            
         });
-        Route::post('/submit-order', [Staff_dashboard::class, 'submitOrder']);
 
     });
 

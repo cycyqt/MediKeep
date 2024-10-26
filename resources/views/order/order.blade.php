@@ -4,24 +4,24 @@
 @section('main-content')
 
 <head>
-    <<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>    
 </head>
 
 <style>
 
     .no-highlight {
-        user-select: none; /* Prevent text selection */
-        -webkit-user-select: none; /* Safari */
-        -moz-user-select: none; /* Firefox */
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
     }
 
     .no-interaction {
-        pointer-events: none; /* Disable all mouse events */
-        user-select: none; /* Disable text selection */
-        caret-color: transparent; /* Hide the text cursor */
-        background-color: transparent; /* Optional: set background to transparent */
-        color: inherit; /* Optional: inherit text color from parent */
+        pointer-events: none;
+        user-select: none;
+        caret-color: transparent;
+        background-color: transparent;
+        color: inherit;
     }
 
     .caret-block {
@@ -37,7 +37,8 @@
     .nav-tabs .nav-item .nav-link {
         border: none;
         margin-right: 3px;
-        color: #333;
+        color: #fff;
+        background-color: darkgray;
         transition: background-color 0.3s, color 0.3s;
         border-radius: 10px 10px 0 0;
     }
@@ -53,7 +54,7 @@
     }
 
     .nav-tabs .nav-item .nav-link:hover {
-        background-color: grey;
+        background-color: gray;
         color: #fff;
         border-radius: 10px 10px 0 0;
     }
@@ -96,14 +97,16 @@
 
     .nav-tabs .nav-item .close-btn {
         position: absolute;
-        right: 10px;
         top: 5px;
+        right: 5px;
         background-color: transparent;
         border: none;
-        font-size: 12px;
+        font-size: 14px;
         color: white;
         cursor: pointer;
         outline: none;
+        z-index: 10;
+        line-height: 1;
     }
 
     .nav-tabs .nav-item .close-btn:hover {
@@ -176,17 +179,21 @@
                             </div>
                         @endif
 
+                        <div style="position: absolute; top: 10px; right: 10px; z-index: 10;">
+                            <a href="{{ route('order.orderlist') }}" class="card-title" style="display: block; height: 100%; line-height: 1.5; padding: 10px; border-radius: 5px; text-align: right;">
+                                <img src="https://i.ibb.co/zHVpKjb/toppng-com-shipping-png-512x512.png" alt="Order Items" style="height: 50px; width: auto;">
+                            </a>
+                        </div>
+
                         <!-- Order Form Starts Here -->
                         <form action="{{ route('staff.add_order') }}" method="POST">
                             @csrf
                             <div class="row p-4">
-
                                 <!-- Left Column: Order Information -->
                                 <div class="col-md-6">
                                     <div class="card-header mb-2 p-2">
                                         <h3 class="card-title no-interaction">Order Form</h3>
                                     </div>
-
                                     <div class="form-group" style="margin-bottom: 15px; margin-top: 51px;">
                                         <select class="form-control" name="supplier_id" id="supplierSelect" required onchange="checkQuantity()">
                                             <option value="" disabled selected hidden style="color: lightgray;">Select Supplier</option>
@@ -199,22 +206,20 @@
                                             @endif
                                         </select>
                                     </div>
-
                                     <div class="form-group no-interaction" style="margin-bottom: 15px;">
                                         <input type="hidden" name="staff_id" value="{{ Auth::id() }}">
                                         <input type="text" class="form-control" value="{{ Auth::user()->name }}" readonly placeholder="Staff">
                                     </div>
-
                                     <div class="form-group" style="margin-bottom: 15px;">
                                         <input type="date" class="form-control" id="orderDate" name="order_date">
                                     </div>
-
                                     <div class="form-group no-interaction" style="margin-bottom: 15px;">
                                         <input type="text" class="form-control" value="Pending" readonly placeholder="Status">
                                         <input type="hidden" name="status" value="Pending">
                                     </div>
                                     
                                     <div class="col-12 text-center">
+                                        {{-- <a href="{{ route('order.orderlist') }}" class="btn btn-primary">View Order List</a> --}}
                                         <button type="submit" class="btn btn-primary" onclick="return validateOrderItems()">Submit Order</button>
                                     </div>
                                 </div>
@@ -222,9 +227,8 @@
                                 <!-- Right Column: Order Items with Tabs -->
                                 <div class="col-md-6">
                                     <div class="card-header mb-2 p-2" style="visibility: hidden;">
-                                        <h3 class="card-title">Order Items</h3>
-                                    </div>                                    
-
+                                        <h3 class="card-title" >Order Items</h3>
+                                    </div>
                                     <!-- Tabs for Order Items -->
                                     <ul class="nav nav-tabs" id="orderItemsTabs" role="tablist">
                                         <li class="nav-item">
@@ -234,7 +238,6 @@
                                             </a>
                                         </li>
                                     </ul>                                    
-
                                     <div class="tab-content" id="orderItemsTabContent">
                                         <div class="tab-pane fade show active order-items" id="item1" role="tabpanel" aria-labelledby="item1-tab">
                                             <div class="form-group" style="margin-bottom: 15px;">
@@ -258,7 +261,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <!-- Buttons -->
                                     <div class="text-center">
                                         <button type="button" class="btn btn-secondary" id="addMoreItemsBtn" onclick="addOrderItem()" disabled>Add More Items</button>
@@ -268,7 +270,6 @@
                             </div>
                         </form>
                         <!-- Order Form Ends Here -->
-
                     </div>
                 </div>
             </div>
@@ -278,21 +279,16 @@
     <div class="modal fade" id="orderSummaryModal" tabindex="-1" role="dialog" aria-labelledby="orderSummaryModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content" style="width: 800px; height: 600px; overflow: hidden; position: relative;">
-                
                 <img src="https://i.ibb.co/zSNR7Bf/Picsart-24-10-25-20-14-54-279.png" alt="Logo" 
                     style="position: absolute; top: 10px; right: 10px; height: 100px; opacity: 1; transform: rotate(-15deg); z-index: 1;">
-
                 <div class="modal-header d-flex justify-content-center align-items-center" 
                     style="background-color: #007bff; color: white; padding: 0.5rem 1rem;">
                     <h5 class="modal-title mx-auto" id="orderSummaryModalLabel" style="margin: 0; font-weight: bold; z-index: 2;">ORDER SUMMARY</h5>
                 </div>
-                
                 <div class="modal-body d-flex flex-column px-5 no-interaction" id="orderSummaryContent" style="height: calc(100% - 4rem);">
                     <div class="mb-3 no-interaction">
-                        <p>A new order will be placed by <strong>{{ Auth::user()->name }}</strong>
-                        to: </p><p><strong id="supplierName"></strong></p> 
+                        <p>A new order will be placed by <strong>{{ Auth::user()->name }}</strong> to: </p><p><strong id="supplierName"></strong></p> 
                     </div>
-                    
                     <div class="table-responsive flex-grow-1 no-interaction" style="max-height: 300px; overflow-y: auto;">
                         <table class="table table-hover table-bordered table-striped mb-0">
                             <thead class="thead-dark no-interaction">
@@ -304,7 +300,7 @@
                                 </tr>
                             </thead>
                             <tbody id="orderItemsTableBody">
-                                <!-- wilL be populated -->
+                                <!-- will be populated -->
                             </tbody>
                         </table>
                     </div>
@@ -326,14 +322,28 @@
             </div>
         </div>
     </div>
+
     @include('components.footer')
 </div>
+
+
 
 @endsection
 
 @push('custom-scripts')
 <script>
     let itemCount = 1;
+
+    const orderDateInput = document.getElementById("orderDate");
+
+    orderDateInput.addEventListener("mousedown", (e) => {
+        e.preventDefault(); // Prevents all mouse clicks from triggering text selection
+    });
+
+    orderDateInput.addEventListener("selectstart", (e) => {
+        e.preventDefault(); // Prevents the start of selection entirely
+    });
+
 
     document.addEventListener("DOMContentLoaded", function() {
         const productSelect = document.querySelectorAll('.product-select');

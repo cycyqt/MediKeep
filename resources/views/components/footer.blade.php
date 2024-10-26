@@ -6,25 +6,23 @@
             © <script>
               document.write(new Date().getFullYear())
             </script>,
-            made with <i class="fa fa-heart"></i> by
-            <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">Creative Tim</a>
-            for a better web.
+            <a class="font-weight-bold" target="_blank">MediKeep</a>
           </div>
         </div>
 
         <div class="col-lg-6">
           <ul class="nav nav-footer justify-content-center justify-content-lg-end">
             <li class="nav-item">
-              <a href="https://www.creative-tim.com" class="nav-link text-muted" target="_blank">Creative Tim</a>
+              <a href="https://github.com/VETEIS" class="nav-link text-muted" target="_blank">VETEIS</a>
             </li>
             <li class="nav-item">
-              <a href="https://www.creative-tim.com/presentation" class="nav-link text-muted" target="_blank">About Us</a>
+              <a href="https://github.com/Xeejay-25" class="nav-link text-muted" target="_blank">Xeejay-25</a>
             </li>
             <li class="nav-item">
-              <a href="https://creative-tim.com/blog" class="nav-link text-muted" target="_blank">Blog</a>
+              <a href="https://github.com/LadyVeronicaaa" class="nav-link pe-0 text-muted" target="_blank">LadyVeronicaaa</a>
             </li>
             <li class="nav-item">
-              <a href="https://www.creative-tim.com/license" class="nav-link pe-0 text-muted" target="_blank">License</a>
+              <a class="nav-link text-muted" target="_blank">theFeated</a>
             </li>
           </ul>
         </div>

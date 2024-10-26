@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Models\Order;
 use App\Models\Order_item;
 use App\Models\Supplier;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\Mail;
 
@@ -162,7 +163,7 @@ class Staff_dashboard extends Controller
         $order->staff_id = $validatedData['staff_id'];
         $order->order_date = $validatedData['order_date'];
         $order->status = $validatedData['status'];
-        $order->total_amount = array_sum($validatedData['total_price']); // Calculate total amount
+        $order->total_amount = array_sum($validatedData['total_price']);
         $orderSaved = $order->save();
 
         if (!$orderSaved) {
@@ -184,13 +185,13 @@ class Staff_dashboard extends Controller
         $supplierEmail = $supplier->contact_info;
         Mail::to($supplierEmail)->send(new OrderConfirmationMail($order, $products, $supplier, $validatedData, "New Order Confirmation - Order ID: {$order->id}"));
 
-        return redirect()->back()->with('success', "Order successfully submitted and emailed to the supplier.");
+        return redirect()->back()->with('success', "Order successfully submitted and emailed to the supplier ");
     }
 
-    public function orderlist ()
+    public function orderlist() 
     {
-        $orders= Order::orderBy('created_at', 'DESC')->get();
-        return view('order.orderlist',compact('orders'));
+        $orders = Order::with('items.product')->orderBy('created_at', 'DESC')->get();
+        return view('order.orderlist', compact('orders'));
     }
 
     public function ordershow ($id)
@@ -232,7 +233,7 @@ class Staff_dashboard extends Controller
         $orderSaved = $order->save();
 
         if (!$orderSaved) {
-            return redirect()->back()->with('error', "Failed to update the order.");
+            return redirect()->back()->with('error', "Failed to update the order");
         }
 
         $order->items()->delete(); 
@@ -248,7 +249,7 @@ class Staff_dashboard extends Controller
             $orderItem->save();
         }
 
-        return redirect()->back()->with('success', "Order successfully updated.");
+        return redirect()->back()->with('success', "Order successfully updated");
     }
 
     public function orderdelete($id)
@@ -256,7 +257,7 @@ class Staff_dashboard extends Controller
         $orders = Order::findOrFail($id);
         $orders->delete();
 
-        return redirect()->route('order.orderlist')->with('success', 'Order deleted successfully.');
+        return redirect()->route('order.orderlist')->with('success', 'Order deleted successfully');
     }
 
     public function supplier ()
@@ -276,5 +277,6 @@ class Staff_dashboard extends Controller
 
         return redirect()->back()->with('success', "Supplier Successfully Added");
     }
+    
 
 }
