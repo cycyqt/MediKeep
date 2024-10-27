@@ -159,6 +159,52 @@
         justify-content: space-between;
     }
 
+    .notification-container {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 100%;
+        padding: 10px 20px;
+        background: linear-gradient(to right, rgba(40, 167, 69, 1) 0%, rgba(40, 167, 69, 1) 80%, rgba(255, 255, 255, 1) 100%);
+        color: #fff;
+        border-radius: 50px 0 0 50px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.5s ease;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .notification-container.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-10px) translateY(-50%); /* Slide in from the right */
+    }
+
+    .notification-container:after {
+        content: '';
+        display: inline-block;
+        width: 35px; 
+        background: transparent; 
+    }
+
+    .custom-success {
+        background-color: #28a745;
+        border-color: #28a745;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .custom-success:hover {
+        background-color: #218838;
+        border-color: #218838;
+        color: #fff;
+    }
+
 </style>
 
 <div class="container-fluid py-4 caret-block no-highlight">
@@ -168,7 +214,6 @@
                 <div class="card z-index-2">
                     <div class="card-body p-2">
 
-                        @include('message')
                         @if ($errors->any())
                             <div class="alert alert-danger">
                                 <ul>
@@ -179,57 +224,24 @@
                             </div>
                         @endif
 
-                        <div style="position: absolute; top: 10px; right: 10px; z-index: 10;">
+                        <div style="position: absolute; top: 30px; right: 30px; z-index: 10;">
                             <a href="{{ route('order.orderlist') }}" class="card-title" style="display: block; height: 100%; line-height: 1.5; padding: 10px; border-radius: 5px; text-align: right;">
+                                <div id="notification-container" class="notification-container position-absolute" style="pointer-events: none;"></div>
                                 <img src="https://i.ibb.co/zHVpKjb/toppng-com-shipping-png-512x512.png" alt="Order Items" style="height: 50px; width: auto;">
                             </a>
                         </div>
 
                         <!-- Order Form Starts Here -->
-                        <form action="{{ route('staff.add_order') }}" method="POST">
+                        {{-- <form action="{{ route('staff.add_order') }}" method="POST"> --}}
+                        <form id="orderForm" method="POST">
                             @csrf
                             <div class="row p-4">
                                 <!-- Left Column: Order Information -->
                                 <div class="col-md-6">
                                     <div class="card-header mb-2 p-2">
-                                        <h3 class="card-title no-interaction">Order Form</h3>
+                                        <h3 class="card-title" >Order Form</h3>
                                     </div>
-                                    <div class="form-group" style="margin-bottom: 15px; margin-top: 51px;">
-                                        <select class="form-control" name="supplier_id" id="supplierSelect" required onchange="checkQuantity()">
-                                            <option value="" disabled selected hidden style="color: lightgray;">Select Supplier</option>
-                                            @if($suppliers->isEmpty())
-                                                <option value="" disabled>No suppliers available</option>
-                                            @else
-                                                @foreach($suppliers as $supplier)
-                                                    <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
-                                                @endforeach
-                                            @endif
-                                        </select>
-                                    </div>
-                                    <div class="form-group no-interaction" style="margin-bottom: 15px;">
-                                        <input type="hidden" name="staff_id" value="{{ Auth::id() }}">
-                                        <input type="text" class="form-control" value="{{ Auth::user()->name }}" readonly placeholder="Staff">
-                                    </div>
-                                    <div class="form-group" style="margin-bottom: 15px;">
-                                        <input type="date" class="form-control" id="orderDate" name="order_date">
-                                    </div>
-                                    <div class="form-group no-interaction" style="margin-bottom: 15px;">
-                                        <input type="text" class="form-control" value="Pending" readonly placeholder="Status">
-                                        <input type="hidden" name="status" value="Pending">
-                                    </div>
-                                    
-                                    <div class="col-12 text-center">
-                                        {{-- <a href="{{ route('order.orderlist') }}" class="btn btn-primary">View Order List</a> --}}
-                                        <button type="submit" class="btn btn-primary" onclick="return validateOrderItems()">Submit Order</button>
-                                    </div>
-                                </div>
-
-                                <!-- Right Column: Order Items with Tabs -->
-                                <div class="col-md-6">
-                                    <div class="card-header mb-2 p-2" style="visibility: hidden;">
-                                        <h3 class="card-title" >Order Items</h3>
-                                    </div>
-                                    <!-- Tabs for Order Items -->
+                                    <!-- Tabbing sys -->
                                     <ul class="nav nav-tabs" id="orderItemsTabs" role="tablist">
                                         <li class="nav-item">
                                             <a class="nav-link active" id="item1-tab" data-toggle="tab" href="#item1" role="tab" aria-controls="item1" aria-selected="true">
@@ -261,10 +273,44 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- Buttons -->
+                                    <!-- add more item btn -->
                                     <div class="text-center">
                                         <button type="button" class="btn btn-secondary" id="addMoreItemsBtn" onclick="addOrderItem()" disabled>Add More Items</button>
+                                    </div>
+                                </div>
+
+                                <!-- Right Column: Order Items with Tabs -->
+                                <div class="col-md-6">
+                                    <div class="card-header mb-2 p-2">
+                                        <h3 class="card-title no-interaction" style="visibility: hidden;">Order Form</h3>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 15px; margin-top: 51px;">
+                                        <select class="form-control" name="supplier_id" id="supplierSelect" required onchange="checkQuantity()">
+                                            <option value="" disabled selected hidden style="color: lightgray;">Select Supplier</option>
+                                            @if($suppliers->isEmpty())
+                                                <option value="" disabled>No suppliers available</option>
+                                            @else
+                                                @foreach($suppliers as $supplier)
+                                                    <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                    <div class="form-group no-interaction" style="margin-bottom: 15px;">
+                                        <input type="hidden" name="staff_id" value="{{ Auth::id() }}">
+                                        <input type="text" class="form-control" value="{{ Auth::user()->name }}" readonly placeholder="Staff">
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 15px;">
+                                        <input type="date" class="form-control" id="orderDate" name="order_date" required>
+                                    </div>
+                                    <div class="form-group no-interaction" style="margin-bottom: 15px;">
+                                        <input type="text" class="form-control" value="Pending" readonly placeholder="Status">
+                                        <input type="hidden" name="status" value="Pending">
+                                    </div>
+                                    <!-- order summary & submir order btn -->
+                                    <div class="col-12 text-center">
                                         <button type="button" class="btn btn-info" id="orderSummaryBtn" onclick="showOrderSummary()">Order Summary</button>
+                                        <button type="submit" class="btn custom-success" onclick="return validateOrderItems()">Submit Order</button>
                                     </div>
                                 </div>
                             </div>
@@ -275,7 +321,7 @@
             </div>
         </div>
     </div>
-    <!-- Order Summary Modal -->
+    <!-- modal -->
     <div class="modal fade" id="orderSummaryModal" tabindex="-1" role="dialog" aria-labelledby="orderSummaryModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content" style="width: 800px; height: 600px; overflow: hidden; position: relative;">
@@ -326,24 +372,59 @@
     @include('components.footer')
 </div>
 
-
-
 @endsection
 
 @push('custom-scripts')
 <script>
     let itemCount = 1;
 
+    document.getElementById('orderForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const formData = new FormData(this);
+
+        fetch("{{ route('staff.add_order') }}", {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            }
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Network response was not OK');
+            return response.json();
+        })
+        .then(data => {
+            const notificationContainer = document.getElementById('notification-container');
+            
+            notificationContainer.innerHTML = `
+                <span>${data.message}</span>
+            `;
+
+            notificationContainer.classList.add('show');
+            
+            setTimeout(() => notificationContainer.classList.remove('show'), 5000);
+        })
+        .catch(error => console.error('Error:', error));
+    });
+
+    document.getElementById("orderSummaryBtn").addEventListener("click", function(event) {
+        event.preventDefault();
+
+        if (document.querySelector("form").checkValidity()) {
+            showOrderSummary();
+        } else {
+            document.querySelector("form").reportValidity();
+        }
+    });
+
     const orderDateInput = document.getElementById("orderDate");
-
     orderDateInput.addEventListener("mousedown", (e) => {
-        e.preventDefault(); // Prevents all mouse clicks from triggering text selection
+        e.preventDefault();
     });
-
     orderDateInput.addEventListener("selectstart", (e) => {
-        e.preventDefault(); // Prevents the start of selection entirely
+        e.preventDefault();
     });
-
 
     document.addEventListener("DOMContentLoaded", function() {
         const productSelect = document.querySelectorAll('.product-select');
@@ -356,7 +437,7 @@
         var price = selectedOption.getAttribute('data-price');
         var unitPriceInput = selectElement.closest('.order-items').querySelector('.unit-price');
         unitPriceInput.value = price;
-        calculateTotalPrice(1);
+        calculateTotalPrice(selectElement.closest('.order-items').querySelector('.quantity').id.split('quantity')[1]);
     }
 
     function calculateTotalPrice(index) {
@@ -489,7 +570,6 @@
             const tab = document.querySelector(`#item${i}`);
             if (tab) {
                 tab.id = `item${i - 1}`;
-                // Update select and input IDs accordingly
                 const productSelect = tab.querySelector('.product-select');
                 const quantityInput = tab.querySelector(`#quantity${i}`);
                 const unitPriceInput = tab.querySelector(`#unitPrice${i}`);
@@ -503,44 +583,79 @@
         }
     }
 
-
     function showOrderSummary() {
+        const supplierSelect = document.getElementById('supplierSelect');
+        const orderDate = document.getElementById('orderDate');
+        const productSelects = document.querySelectorAll('.product-select');
+        const quantityInputs = document.querySelectorAll('.quantity');
 
-        const supplierName = document.getElementById('supplierSelect').selectedOptions[0].text;
-        document.getElementById('supplierName').innerText = supplierName;
+        let isValid = true;
+        if (!supplierSelect.value) {
+            isValid = false;
+            supplierSelect.reportValidity();
+        } else if (!orderDate.value) {
+            isValid = false;
+            orderDate.reportValidity();
+        } else {
+            productSelects.forEach((productSelect, index) => {
+                if (!productSelect.value) {
+                    isValid = false;
+                    productSelect.reportValidity();
+                }
+            });
 
-        const orderItemsTableBody = document.getElementById('orderItemsTableBody');
-        orderItemsTableBody.innerHTML = '';
+            quantityInputs.forEach((quantityInput, index) => {
+                if (!quantityInput.value || quantityInput.value <= 0) {
+                    isValid = false;
+                    quantityInput.reportValidity();
+                }
+            });
+        }
 
-        let totalAmount = 0;
+        if (isValid) {
 
-        for (let i = 1; i <= itemCount; i++) {
-            const productSelect = document.querySelector(`#item${i} .product-select`);
-            const quantityInput = document.querySelector(`#quantity${i}`);
-            const unitPriceInput = document.querySelector(`#unitPrice${i}`);
-            const totalPriceInput = document.querySelector(`#totalPrice${i}`);
+            const supplierName = supplierSelect.selectedOptions[0].text;
+            document.getElementById('supplierName').innerText = supplierName;
 
-            if (productSelect && quantityInput && unitPriceInput && totalPriceInput) {
+            const orderItemsTableBody = document.getElementById('orderItemsTableBody');
+            orderItemsTableBody.innerHTML = '';
+
+            let totalAmount = 0;
+
+            productSelects.forEach((productSelect, index) => {
+                const quantityInput = quantityInputs[index];
+                const unitPriceInput = document.querySelector(`#unitPrice${index + 1}`);
+                const totalPriceInput = document.querySelector(`#totalPrice${index + 1}`);
+
                 if (productSelect.value && quantityInput.value) {
                     const itemName = productSelect.options[productSelect.selectedIndex].text;
                     const quantity = quantityInput.value;
-                    const unitPrice = unitPriceInput.value;
-                    const totalPrice = totalPriceInput.value;
+                    const unitPrice = parseFloat(unitPriceInput.value);
+                    const totalPrice = parseFloat(totalPriceInput.value);
+
+                    // Calculate total price for this item if not already calculated
+                    const calculatedTotalPrice = quantity * unitPrice;
 
                     const row = `<tr>
                         <td class="text-center">${itemName}</td>
                         <td class="text-center">${quantity}</td>
-                        <td class="text-center">₱${parseFloat(unitPrice).toFixed(2)}</td>
-                        <td class="text-center">₱${parseFloat(totalPrice).toFixed(2)}</td>
+                        <td class="text-center">₱${unitPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                        <td class="text-center">₱${calculatedTotalPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                     </tr>`;
+                    
                     orderItemsTableBody.innerHTML += row;
 
-                    totalAmount += parseFloat(totalPrice);
+                    totalAmount += calculatedTotalPrice; // Use the calculated total price
                 }
-            }
+            });
+
+            const formattedTotalAmount = totalAmount % 1 === 0
+                ? `₱${totalAmount.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
+                : `₱${totalAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+            document.getElementById('totalAmount').innerText = formattedTotalAmount;
+            $('#orderSummaryModal').modal('show');
         }
-        document.getElementById('totalAmount').innerText = `₱${totalAmount.toFixed(2)}`;
-        $('#orderSummaryModal').modal('show');
     }
 
 </script>

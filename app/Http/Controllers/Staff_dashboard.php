@@ -185,7 +185,7 @@ class Staff_dashboard extends Controller
         $supplierEmail = $supplier->contact_info;
         Mail::to($supplierEmail)->send(new OrderConfirmationMail($order, $products, $supplier, $validatedData, "New Order Confirmation - Order ID: {$order->id}"));
 
-        return redirect()->back()->with('success', "Order successfully submitted and emailed to the supplier ");
+        return response()->json(['success' => true, 'message' => "Your order has been placed! "]);
     }
 
     public function orderlist() 
