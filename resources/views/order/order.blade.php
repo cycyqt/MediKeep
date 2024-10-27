@@ -205,6 +205,25 @@
         color: #fff;
     }
 
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 99999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .loading-message {
+        color: white;
+        font-size: 22px;
+        font-weight: bold;
+    }
+
 </style>
 
 <div class="container-fluid py-4 caret-block no-highlight">
@@ -232,9 +251,13 @@
                         </div>
 
                         <!-- Order Form Starts Here -->
-                        {{-- <form action="{{ route('staff.add_order') }}" method="POST"> --}}
                         <form id="orderForm" method="POST">
                             @csrf
+
+                            <div id="loadingOverlay" class="loading-overlay no-interaction" style="display:none;">
+                                <div class="loading-message">Processing your order, please wait...</div>
+                            </div>
+
                             <div class="row p-4">
                                 <!-- Left Column: Order Information -->
                                 <div class="col-md-6">
@@ -382,6 +405,9 @@
         event.preventDefault();
         const formData = new FormData(this);
 
+        // Show loading overlay
+        $('#loadingOverlay').appendTo('body').css('display', 'flex');
+
         fetch("{{ route('staff.add_order') }}", {
             method: 'POST',
             body: formData,
@@ -391,21 +417,45 @@
             }
         })
         .then(response => {
+            // Check if the response is OK (status in the range 200-299)
             if (!response.ok) throw new Error('Network response was not OK');
+
             return response.json();
         })
         .then(data => {
+            // Hide loading overlay
+            document.getElementById('loadingOverlay').style.display = 'none';
+
             const notificationContainer = document.getElementById('notification-container');
-            
-            notificationContainer.innerHTML = `
-                <span>${data.message}</span>
-            `;
+
+            // Check the success status from the server response
+            if (data.success) {
+                notificationContainer.innerHTML = `
+                    <span>${data.message}</span>
+                `;
+            } else {
+                notificationContainer.innerHTML = `
+                    <span>An error occurred: ${data.message}</span>
+                `;
+            }
 
             notificationContainer.classList.add('show');
-            
             setTimeout(() => notificationContainer.classList.remove('show'), 5000);
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            console.error('Error:', error);
+
+            // Hide loading overlay
+            document.getElementById('loadingOverlay').style.display = 'none';
+
+            const notificationContainer = document.getElementById('notification-container');
+            notificationContainer.innerHTML = `
+                <span>An error occurred. Please try again.</span>
+            `;
+            notificationContainer.classList.add('show');
+
+            setTimeout(() => notificationContainer.classList.remove('show'), 5000);
+        });
     });
 
     document.getElementById("orderSummaryBtn").addEventListener("click", function(event) {
