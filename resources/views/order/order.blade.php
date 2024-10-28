@@ -67,22 +67,26 @@
     .btn-primary {
         background-color: #007bff;
         border-color: #007bff;
+        border-radius: 50px;
     }
 
     .btn-primary:hover {
         background-color: #0056b3;
         border-color: #0056b3;
+        border-radius: 50px;
     }
 
     .btn-info {
         background-color: #007bff;
         border-color: #007bff;
+        border-radius: 50px;
         color: white;
     }
 
     .btn-info:hover {
         background-color: #0056b3;
         border-color: #0056b3;
+        border-radius: 50px;
     }
 
     .form-control:focus {
@@ -194,14 +198,15 @@
     .custom-success {
         background-color: #28a745;
         border-color: #28a745;
+        border-radius: 50px;
         color: white;
-        border-radius: 5px;
         cursor: pointer;
     }
 
     .custom-success:hover {
         background-color: #218838;
         border-color: #218838;
+        border-radius: 50px;
         color: #fff;
     }
 
@@ -216,12 +221,30 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        pointer-events: all;
     }
 
-    .loading-message {
-        color: white;
-        font-size: 22px;
-        font-weight: bold;
+    .dual-ring-spinner {
+        display: inline-block;
+        width: 64px;
+        height: 64px;
+    }
+
+    .dual-ring-spinner:after {
+        content: " ";
+        display: block;
+        width: 48px;
+        height: 48px;
+        margin: 8px;
+        border-radius: 50%;
+        border: 6px solid #007bff;
+        border-color: #007bff transparent #28a745 transparent;
+        animation: dual-ring-spin 1.2s linear infinite;
+    }
+
+    @keyframes dual-ring-spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
     }
 
 </style>
@@ -254,9 +277,9 @@
                         <form id="orderForm" method="POST">
                             @csrf
 
-                            <div id="loadingOverlay" class="loading-overlay no-interaction" style="display:none;">
-                                <div class="loading-message">Processing your order, please wait...</div>
-                            </div>
+                            <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+                                <div class="dual-ring-spinner"></div>
+                            </div>                            
 
                             <div class="row p-4">
                                 <!-- Left Column: Order Information -->
@@ -267,8 +290,8 @@
                                     <!-- Tabbing sys -->
                                     <ul class="nav nav-tabs" id="orderItemsTabs" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link active" id="item1-tab" data-toggle="tab" href="#item1" role="tab" aria-controls="item1" aria-selected="true">
-                                                New Item
+                                            <a class="nav-link active" id="item1-tab" data-toggle="tab" href="#item1" role="tab" aria-controls="item1" aria-selected="true" style="font-size: 12px; font-weight: bold">
+                                                NEW ITEM
                                                 <button type="button" class="close-btn" onclick="removeTab(1)">&times;</button>
                                             </a>
                                         </li>
@@ -298,7 +321,7 @@
                                     </div>
                                     <!-- add more item btn -->
                                     <div class="text-center">
-                                        <button type="button" class="btn btn-secondary" id="addMoreItemsBtn" onclick="addOrderItem()" disabled>Add More Items</button>
+                                        <button type="button" class="btn btn-secondary" style="border-radius: 50px" id="addMoreItemsBtn" onclick="addOrderItem()" disabled>Add More Items</button>
                                     </div>
                                 </div>
 
@@ -307,7 +330,7 @@
                                     <div class="card-header mb-2 p-2">
                                         <h3 class="card-title no-interaction" style="visibility: hidden;">Order Form</h3>
                                     </div>
-                                    <div class="form-group" style="margin-bottom: 15px; margin-top: 51px;">
+                                    <div class="form-group" style="margin-bottom: 15px; margin-top: 44px;">
                                         <select class="form-control" name="supplier_id" id="supplierSelect" required onchange="checkQuantity()">
                                             <option value="" disabled selected hidden style="color: lightgray;">Select Supplier</option>
                                             @if($suppliers->isEmpty())
@@ -405,7 +428,6 @@
         event.preventDefault();
         const formData = new FormData(this);
 
-        // Show loading overlay
         $('#loadingOverlay').appendTo('body').css('display', 'flex');
 
         fetch("{{ route('staff.add_order') }}", {
@@ -417,18 +439,15 @@
             }
         })
         .then(response => {
-            // Check if the response is OK (status in the range 200-299)
             if (!response.ok) throw new Error('Network response was not OK');
-
             return response.json();
         })
         .then(data => {
-            // Hide loading overlay
+
             document.getElementById('loadingOverlay').style.display = 'none';
 
             const notificationContainer = document.getElementById('notification-container');
 
-            // Check the success status from the server response
             if (data.success) {
                 notificationContainer.innerHTML = `
                     <span>${data.message}</span>
@@ -445,7 +464,6 @@
         .catch(error => {
             console.error('Error:', error);
 
-            // Hide loading overlay
             document.getElementById('loadingOverlay').style.display = 'none';
 
             const notificationContainer = document.getElementById('notification-container');
@@ -538,8 +556,8 @@
 
         var newItemTab = `
             <li class="nav-item">
-                <a class="nav-link" id="item${itemCount}-tab" data-toggle="tab" href="#item${itemCount}" role="tab" aria-controls="item${itemCount}" aria-selected="false">
-                    New Item
+                <a class="nav-link" id="item${itemCount}-tab" data-toggle="tab" href="#item${itemCount}" role="tab" aria-controls="item${itemCount}" aria-selected="false" style="font-size: 12px; font-weight: bold">
+                    NEW ITEM
                     <button type="button" class="close-btn" onclick="removeTab(${itemCount})">&times;</button>
                 </a>
             </li>
@@ -583,7 +601,7 @@
 
     function updateTabName(selectElement) {
         var selectedOption = selectElement.options[selectElement.selectedIndex];
-        var productName = selectedOption.text;
+        var productName = selectedOption.text.toUpperCase();
         var tabId = selectElement.closest('.tab-pane').id;
 
         document.querySelector(`a[href='#${tabId}']`).innerHTML = `
@@ -683,7 +701,6 @@
                     const unitPrice = parseFloat(unitPriceInput.value);
                     const totalPrice = parseFloat(totalPriceInput.value);
 
-                    // Calculate total price for this item if not already calculated
                     const calculatedTotalPrice = quantity * unitPrice;
 
                     const row = `<tr>
@@ -695,7 +712,7 @@
                     
                     orderItemsTableBody.innerHTML += row;
 
-                    totalAmount += calculatedTotalPrice; // Use the calculated total price
+                    totalAmount += calculatedTotalPrice;
                 }
             });
 
