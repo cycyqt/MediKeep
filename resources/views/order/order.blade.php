@@ -367,6 +367,7 @@
                 </div>
             </div>
         </div>
+
     </div>
     <!-- modal -->
     <div class="modal fade" id="orderSummaryModal" tabindex="-1" role="dialog" aria-labelledby="orderSummaryModalLabel" aria-hidden="true">
@@ -393,7 +394,7 @@
                                 </tr>
                             </thead>
                             <tbody id="orderItemsTableBody">
-                                <!-- will be populated -->
+
                             </tbody>
                         </table>
                     </div>
