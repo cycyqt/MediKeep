@@ -394,7 +394,7 @@
                                 </tr>
                             </thead>
                             <tbody id="orderItemsTableBody">
-
+ \                              <!-- Will be populated -->
                             </tbody>
                         </table>
                     </div>
