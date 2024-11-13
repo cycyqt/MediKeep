@@ -438,7 +438,7 @@
                 <div class="modal-header d-flex justify-content-center align-items-center"
                     style="background-color: #007bff; color: white; padding: 0.5rem 1rem; z-index: 2;">
                     <h5 class="modal-title mx-auto" id="receiptSummaryModalLabel" style="margin: 0; font-weight: bold;">
-                        RECEIPT SUMMARY
+                        RECEIPT
                     </h5>
                 </div>
 
