@@ -803,7 +803,7 @@
     }
 
 
-    function showOrderReceipt(receiptId) {
+    function showOrderReceipt() {
         const supplierSelect = document.getElementById('supplierSelect');
         const orderDate = document.getElementById('orderDate').value;
         const productSelects = document.querySelectorAll('.product-select');
@@ -839,11 +839,10 @@
             const supplierName = supplierSelect.selectedOptions[0].text;
             document.getElementById('receiptSupplierName').innerText = supplierName;
 
-            // Set order date in receipt
             document.getElementById('receiptDate').textContent = orderDate ? orderDate : '--';
 
-            // Set receipt ID from the database
-            document.getElementById('receiptNumber').textContent = receiptId ? receiptId : '--';
+            const receiptId = `R-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`;
+            document.getElementById('receiptNumber').textContent = receiptId;
 
             const orderItemsTableBody = document.getElementById('receiptItemsTableBody');
             orderItemsTableBody.innerHTML = '';
@@ -864,7 +863,6 @@
                     const formattedUnitPrice = `₱${unitPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
                     const formattedTotalPrice = `₱${calculatedTotalPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-                    // Add a row to the receipt table
                     const row = `
                         <tr>
                             <td class="text-center">${itemName}</td>
