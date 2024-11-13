@@ -6,6 +6,7 @@
 <head>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
 </head>
 
 <style>
@@ -394,7 +395,7 @@
                                 </tr>
                             </thead>
                             <tbody id="orderItemsTableBody">
- \                              <!-- Will be populated -->
+                                 <!-- Will be populated -->
                             </tbody>
                         </table>
                     </div>
@@ -420,68 +421,82 @@
     @include('components.footer')
 </div>
 
-@endsection
+
+
 <!-- Receipt Summary Modal -->
 <div class="modal fade" id="receiptSummaryModal" tabindex="-1" role="dialog" aria-labelledby="receiptSummaryModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content" style="width: 800px; height: 600px; overflow: hidden; position: relative;">
-            <!-- Logo -->
-            <img src="https://i.ibb.co/zSNR7Bf/Picsart-24-10-25-20-14-54-279.png" alt="Logo"
-                style="position: absolute; top: 10px; right: 10px; height: 100px; opacity: 1; transform: rotate(-15deg); z-index: 1;">
 
-            <!-- Modal Header -->
-            <div class="modal-header d-flex justify-content-center align-items-center"
-                style="background-color: #007bff; color: white; padding: 0.5rem 1rem;">
-                <h5 class="modal-title mx-auto" id="receiptSummaryModalLabel" style="margin: 0; font-weight: bold; z-index: 2;">
-                    RECEIPT SUMMARY
-                </h5>
-            </div>
+            <div id="receiptSummaryContainer" style="position: relative; z-index: 1;">
 
-            <!-- Modal Body -->
-            <div class="modal-body d-flex flex-column px-5 no-interaction" id="receiptSummaryContent" style="height: calc(100% - 4rem);">
-                <div class="mb-3 no-interaction">
-                    <p>A receipt for <strong>{{ Auth::user()->name }}</strong> from:</p>
-                    <p><strong id="receiptSupplierName"></strong></p>
+                <!-- Logo -->
+                <img src="https://i.ibb.co/zSNR7Bf/Picsart-24-10-25-20-14-54-279.png" alt="Logo"
+                    style="position: absolute; top: 10px; right: 10px; height: 100px; opacity: 1; transform: rotate(-15deg); z-index: 1;">
+
+                <!-- Modal Header -->
+                <div class="modal-header d-flex justify-content-center align-items-center"
+                    style="background-color: #007bff; color: white; padding: 0.5rem 1rem; z-index: 2;">
+                    <h5 class="modal-title mx-auto" id="receiptSummaryModalLabel" style="margin: 0; font-weight: bold;">
+                        RECEIPT SUMMARY
+                    </h5>
                 </div>
 
-                <!-- Table for Receipt Items -->
-                <div class="table-responsive flex-grow-1 no-interaction" style="max-height: 300px; overflow-y: auto;">
-                    <table class="table table-hover table-bordered table-striped mb-0">
-                        <thead class="thead-dark no-interaction">
+                <!-- Modal Body -->
+                <div class="modal-body d-flex flex-column px-5 no-interaction" style="height: calc(100% - 4rem);">
+                    <div class="mb-3 no-interaction">
+                        <p>Proccesed by: <strong>{{ Auth::user()->name }}</strong></p>
+                        <p>Supplier: <strong id="receiptSupplierName"></strong></p>
+                        <p>Receipt Number: <span id="receiptNumber"></span></p>
+                        <p>Receipt Date: <span id="receiptDate"></span></p>
+                    </div>
+
+                    <!-- Table for Receipt Items -->
+                    <div class="table-responsive flex-grow-1 no-interaction" style="max-height: 300px; overflow-y: auto;">
+                        <table class="table table-hover table-bordered table-striped mb-0">
+                            <thead class="thead-dark no-interaction">
+                                <tr>
+                                    <th class="text-center">Item</th>
+                                    <th class="text-center">Quantity</th>
+                                    <th class="text-center">Unit Price</th>
+                                    <th class="text-center">Total Price</th>
+                                </tr>
+                            </thead>
+                            <tbody id="receiptItemsTableBody">
+                                <!-- Will be populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Modal Footer for Total Amount -->
+                <div class="modal-footer p-0 no-interaction" style="position: relative; z-index: 2;">
+                    <table class="table mb-0 no-interaction">
+                        <tfoot>
                             <tr>
-                                <th class="text-center">Item</th>
-                                <th class="text-center">Quantity</th>
-                                <th class="text-center">Unit Price</th>
-                                <th class="text-center">Total Price</th>
+                                <th colspan="4" class="text-center bg-light no-interaction">
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <span class="text-right mr-2">Total Amount:<span class="opacity-0">--</span></span>
+                                        <span id="receiptTotalAmount" class="ml-2">₱0.00</span>
+                                    </div>
+                                </th>
                             </tr>
-                        </thead>
-                        <tbody id="receiptItemsTableBody">
-                            <!-- Will be populated -->
-                        </tbody>
+                        </tfoot>
                     </table>
+
+
+                </div>
+                <div class="d-flex justify-content-center" style="padding-top: 10px; z-index: 3; position: relative;">
+                    <button type="button" class="btn btn-info" id="orderSummaryBtn" onclick="generatePDF()">Generate PDF</button>
                 </div>
             </div>
-
-            <!-- Modal Footer for Total Amount -->
-            <div class="modal-footer p-0 no-interaction">
-                <table class="table mb-0 no-interaction">
-                    <tfoot>
-                        <tr>
-                            <th colspan="4" class="text-center bg-light no-interaction">
-                                <div class="d-flex justify-content-center align-items-center">
-                                    <span class="text-right mr-2">Total Amount:<span class="opacity-0">--</span></span>
-                                    <span id="receiptTotalAmount" class="ml-2">₱0.00</span>
-                                </div>
-                            </th>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-            <button type="button" class="btn btn-info" id="orderSummaryBtn" onclick="showOrderReceipt()">Generate pdf</button>
         </div>
     </div>
 </div>
 
+
+
+@endsection
 @push('custom-scripts')
 <script>
     let itemCount = 1;
@@ -786,28 +801,32 @@
             $('#orderSummaryModal').modal('show');
         }
     }
-    function showOrderReceipt() {
+
+
+    function showOrderReceipt(receiptId) {
         const supplierSelect = document.getElementById('supplierSelect');
-        const orderDate = document.getElementById('orderDate');
+        const orderDate = document.getElementById('orderDate').value;
         const productSelects = document.querySelectorAll('.product-select');
         const quantityInputs = document.querySelectorAll('.quantity');
 
         let isValid = true;
+
+        // Check for validity
         if (!supplierSelect.value) {
             isValid = false;
             supplierSelect.reportValidity();
-        } else if (!orderDate.value) {
+        } else if (!orderDate) {
             isValid = false;
-            orderDate.reportValidity();
+            document.getElementById('orderDate').reportValidity();
         } else {
-            productSelects.forEach((productSelect, index) => {
+            productSelects.forEach((productSelect) => {
                 if (!productSelect.value) {
                     isValid = false;
                     productSelect.reportValidity();
                 }
             });
 
-            quantityInputs.forEach((quantityInput, index) => {
+            quantityInputs.forEach((quantityInput) => {
                 if (!quantityInput.value || quantityInput.value <= 0) {
                     isValid = false;
                     quantityInput.reportValidity();
@@ -816,9 +835,15 @@
         }
 
         if (isValid) {
-
+            // Set supplier name in receipt
             const supplierName = supplierSelect.selectedOptions[0].text;
-            document.getElementById('supplierName').innerText = supplierName;
+            document.getElementById('receiptSupplierName').innerText = supplierName;
+
+            // Set order date in receipt
+            document.getElementById('receiptDate').textContent = orderDate ? orderDate : '--';
+
+            // Set receipt ID from the database
+            document.getElementById('receiptNumber').textContent = receiptId ? receiptId : '--';
 
             const orderItemsTableBody = document.getElementById('receiptItemsTableBody');
             orderItemsTableBody.innerHTML = '';
@@ -828,39 +853,72 @@
             productSelects.forEach((productSelect, index) => {
                 const quantityInput = quantityInputs[index];
                 const unitPriceInput = document.querySelector(`#unitPrice${index + 1}`);
-                const totalPriceInput = document.querySelector(`#totalPrice${index + 1}`);
 
                 if (productSelect.value && quantityInput.value) {
                     const itemName = productSelect.options[productSelect.selectedIndex].text;
-                    const quantity = quantityInput.value;
+                    const quantity = parseInt(quantityInput.value);
                     const unitPrice = parseFloat(unitPriceInput.value);
-                    const totalPrice = parseFloat(totalPriceInput.value);
-
                     const calculatedTotalPrice = quantity * unitPrice;
 
-                    const row = `<tr>
-                        <td class="text-center">${itemName}</td>
-                        <td class="text-center">${quantity}</td>
-                        <td class="text-center">₱${unitPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                        <td class="text-center">₱${calculatedTotalPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                    </tr>`;
+                    // Format unit price and total price
+                    const formattedUnitPrice = `₱${unitPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                    const formattedTotalPrice = `₱${calculatedTotalPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+                    // Add a row to the receipt table
+                    const row = `
+                        <tr>
+                            <td class="text-center">${itemName}</td>
+                            <td class="text-center">${quantity}</td>
+                            <td class="text-center">${formattedUnitPrice}</td>
+                            <td class="text-center">${formattedTotalPrice}</td>
+                        </tr>
+                    `;
 
                     orderItemsTableBody.innerHTML += row;
 
                     totalAmount += calculatedTotalPrice;
                 }
-
             });
 
+            // Format and display the total amount
             const formattedTotalAmount = totalAmount % 1 === 0
-                ? `₱${totalAmount.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
+                ? `₱${totalAmount.toLocaleString(undefined, { minimumFractionDigits: 0 })}`
                 : `₱${totalAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-            document.getElementById('totalAmount').innerText = formattedTotalAmount;
+            document.getElementById('receiptTotalAmount').innerText = formattedTotalAmount;
+
+            // Show the modal
             $('#receiptSummaryModal').modal('show');
         }
     }
 
+
+
+    function generatePDF() {
+        const element = document.getElementById('receiptSummaryContainer');
+        const pdfButton = document.querySelector('button[onclick="generatePDF()"]');
+
+        pdfButton.style.display = 'none';
+
+        const options = {
+            margin: 0.5,
+            filename: 'Receipt_Summary.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: {
+                scale: 2,
+                logging: true,
+                useCORS: true,
+                backgroundColor: "#ffffff"
+            },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        };
+
+
+        html2pdf().set(options).from(element).save()
+            .then(function() {
+                pdfButton.style.display = 'inline-block';
+        });
+}
 
 
 </script>
