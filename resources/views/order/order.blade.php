@@ -487,7 +487,7 @@
 
                 </div>
                 <div class="d-flex justify-content-center" style="padding-top: 10px; z-index: 3; position: relative;">
-                    <button type="button" class="btn btn-info" id="orderSummaryBtn" onclick="generatePDF()">Generate PDF</button>
+                    <button type="button" class="btn btn-info" id="orderSummaryBtn" onclick="generatePDF()">Generate Receipt</button>
                 </div>
             </div>
         </div>
@@ -887,6 +887,7 @@
 
             // Show the modal
             $('#receiptSummaryModal').modal('show');
+
         }
     }
 
